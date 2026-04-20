@@ -23,15 +23,15 @@ def prompt_user(options: dict[int, Option]) -> tuple[int, str]:
 
     # Build input prompt
     answer: int = 0
-    input_text = "Select an option:\n\t"
-    input_text += "\n\t".join(
+    prompt = "Select an option:\n\t"
+    prompt += "\n\t".join(
         [f"{key}. {option.description}" for key, option in options.items()]
     )
-    input_text += "\n"
+    prompt += "\n"
 
     # Wait for valid response
     while answer not in options.keys():
-        answer = input(input_text)
+        answer = input(prompt)
         try:
             answer = int(answer)
         except ValueError:
