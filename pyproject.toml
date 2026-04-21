@@ -8,3 +8,8 @@ dependencies = [
     "ruff>=0.15.11",
     "tools>=1.0.27",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
