@@ -24,6 +24,8 @@ def get_user_inputs() -> tuple[str, int, bool]:
 def new_warscroll(name: str, points: int, is_hero: bool) -> dict:
     return  {"name": name, "points": points, "is_hero": is_hero}
 
+
+ # TODO : Extract the part of this that appends the warscroll to the existing list so it can be tested on its own
 def create_warscroll() -> dict:
 
     name, points, is_hero = get_user_inputs()
@@ -53,6 +55,13 @@ def create_warscroll() -> dict:
 def save_warscrolls(warscrolls: dict):
     with open("warscrolls.json", "w") as f:
         f.write(json.dumps(warscrolls))
+
+def list_warscrolls():
+    warscrolls = load_warscrolls()
+    result = []
+    for k, ws in warscrolls.items:
+        result.append(f"{k}: {ws}")
+    return result
 
 def load_warscrolls() -> dict:
     from pathlib import Path

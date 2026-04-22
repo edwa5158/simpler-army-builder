@@ -1,12 +1,21 @@
 from warscroll import get_user_inputs, new_warscroll,save_warscrolls
 from pytest import MonkeyPatch
 import io
+from pathlib import Path
+import os
+
+if Path("warscrolls.json").exists():
+    os.remove("filename.txt")
 
 name: str = "Clanrats"
 points: int = 150
 is_hero: bool = False
 input_tuple = (name, points, is_hero)
 warscroll_dict = {"name": name, "points": points, "is_hero": is_hero}
+warscrolls_json = """{["Clanrats": {"name": "Clanrats", "points": 150, "is_hero": false}]}"""
+
+ratling_warscroll: dict = {"name": "Ratling Gun", "points": 200, "is_hero": False}
+
 
 def test_get_user_inputs(monkeypatch: MonkeyPatch):
     mock_args:str = ", ".join([str(x) for x in input_tuple])
@@ -26,5 +35,16 @@ def test_new_warscroll():
 
 def test_save_warscroll():
     save_warscrolls(warscroll_dict)
-    from pathlib import Path
+
     assert Path("warscrolls.json").exists()
+    if Path("warscrolls.json").exists():
+        os.remove("filename.txt")
+
+
+def test_save_multiple_warscrolls():
+    save_warscrolls(warscroll_dict)
+    save_warscrolls(ratling_warscroll)
+
+
+    if Path("warscrolls.json").exists():
+        os.remove("filename.txt")
