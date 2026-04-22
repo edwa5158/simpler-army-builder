@@ -1,7 +1,5 @@
 from warscroll import get_user_inputs, new_warscroll,save_warscrolls
-import pytest
 from pytest import MonkeyPatch
-import sys
 import io
 
 name: str = "Clanrats"
