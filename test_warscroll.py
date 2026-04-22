@@ -15,7 +15,7 @@ warscroll_dict = {"name": name, "points": points, "is_hero": is_hero}
 warscrolls_json = """{["Clanrats": {"name": "Clanrats", "points": 150, "is_hero": false}]}"""
 
 ratling_warscroll: dict = {"name": "Ratling Gun", "points": 200, "is_hero": False}
-
+filename = "warscrolls.json"
 
 def test_get_user_inputs(monkeypatch: MonkeyPatch):
     mock_args:str = ", ".join([str(x) for x in input_tuple])
@@ -36,9 +36,9 @@ def test_new_warscroll():
 def test_save_warscroll():
     save_warscrolls(warscroll_dict)
 
-    assert Path("warscrolls.json").exists()
-    if Path("warscrolls.json").exists():
-        os.remove("filename.txt")
+    assert Path(filename).exists()
+    if Path(filename).exists():
+        os.remove(filename)
 
 
 def test_save_multiple_warscrolls():
@@ -46,5 +46,5 @@ def test_save_multiple_warscrolls():
     save_warscrolls(ratling_warscroll)
 
 
-    if Path("warscrolls.json").exists():
-        os.remove("filename.txt")
+    if Path(filename).exists():
+        os.remove(filename)
