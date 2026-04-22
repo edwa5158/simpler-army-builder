@@ -4,9 +4,6 @@ import io
 from pathlib import Path
 import os
 
-if Path("warscrolls.json").exists():
-    os.remove("filename.txt")
-
 name: str = "Clanrats"
 points: int = 150
 is_hero: bool = False
@@ -16,6 +13,9 @@ warscrolls_json = """{["Clanrats": {"name": "Clanrats", "points": 150, "is_hero"
 
 ratling_warscroll: dict = {"name": "Ratling Gun", "points": 200, "is_hero": False}
 filename = "warscrolls.json"
+
+if Path(filename).exists():
+    os.remove(filename)
 
 def test_get_user_inputs(monkeypatch: MonkeyPatch):
     mock_args:str = ", ".join([str(x) for x in input_tuple])
