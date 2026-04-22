@@ -28,5 +28,5 @@ def test_new_warscroll():
 
 def test_save_warscroll():
     save_warscrolls(warscroll_dict)
-
-    assert True
+    from pathlib import Path
+    assert Path("warscrolls.json").exists()
