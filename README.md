@@ -1,5 +1,7 @@
 # simpler-army-builder
 
+[![Python package](https://github.com/edwa5158/simpler-army-builder/actions/workflows/main.yml/badge.svg)](https://github.com/edwa5158/simpler-army-builder/actions/workflows/main.yml)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=edwa5158_simpler-army-builder&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=edwa5158_simpler-army-builder)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=edwa5158_simpler-army-builder&metric=bugs)](https://sonarcloud.io/summary/new_code?id=edwa5158_simpler-army-builder)
