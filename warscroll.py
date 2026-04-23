@@ -11,6 +11,8 @@ class Warscroll:
     def to_dict(self):
         return {"name": self.name, "points": self.points, "is_hero": self.is_hero}
 
+
+
     def __repr__(self):
         return json.dumps(self.to_dict())
 
@@ -39,6 +41,11 @@ class Warscrolls:
         for k, ws in self.warscrolls.items:
             result.append(f"{k}: {ws}")
         return result
+
+    def append_warscroll(self, warscroll):
+        name: str = warscroll["name"]
+        self.warscrolls[name] = warscroll
+        return self.warscrolls
 
 def get_user_inputs() -> tuple[str, int, bool]:
     is_valid: bool = False

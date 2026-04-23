@@ -2,6 +2,19 @@ import json
 from prompt_utils import prompt_user, Option
 from regiment import add_regiment
 
+class Army:
+    def __init__(self, name: str):
+        self.name = name
+        self.regiments = []
+    
+    def to_dict(self): 
+        return {"name": self.name, "regiments": {self.regiments}}
+
+    def save_army(self):
+        json_str = json.dumps(army, indent=4)
+        with open("army.json", "w") as f:
+            f.write(json_str)
+        print("Army saved")
 
 def new_army():
     army = {}
