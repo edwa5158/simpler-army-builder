@@ -5,7 +5,6 @@ class Warscroll:
         self.name = name
         self.points: int = 0
 
-
 class Unit:
     def __init__(self):
         self.warscroll = Warscroll()
