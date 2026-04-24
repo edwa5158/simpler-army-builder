@@ -1,35 +1,47 @@
 import json
-from prompt_utils import prompt_user, Option
-from regiment import add_regiment
+from regiment import Regiment
 
 class Army:
     def __init__(self, name: str):
         self.name = name
-        self.regiments = []
+        self.regiments: list[Regiment] = []
+        self._regiment_number = 0 
     
     def to_dict(self): 
-        return {"name": self.name, "regiments": {self.regiments}}
+        return {"name": self.name, "regiments": self.regiments}
 
+    def add_regiment(self) -> Regiment:
+        regiment_name = f"Regiment {self._regiment_number:03}"
+        regiment = Regiment(regiment_name)
+        self.regiments.append(regiment)
+        self._regiment_number += 1
+        return regiment
+    
     def save_army(self):
-        json_str = json.dumps(army, indent=4)
+        json_str = json.dumps(self.army, indent=4)
         with open("army.json", "w") as f:
             f.write(json_str)
         print("Army saved")
 
-def new_army():
-    army = {}
-    army["name"] = str(input("Enter a name for your army: "))
-    print(f"You named your army {army.get('name', '')}\n")
-    build_army(army)
+    # TODO: Make this a class method so that I can load an army before I've created one.
+    def load_army(self) -> tuple[bool, str]:
+        try:
+            with open("army.json", "r") as f:
+                self.army = json.load(f)
+                reason = ""
+                success = True
+        except FileNotFoundError as e:
+            reason = str(e)
+            success = False
+        except json.JSONDecodeError as e:
+            success = False
+            reason = str(e)
+        return success, reason
 
 
-def build_army(army):
-    options: dict[int, Option] = {
-        1: Option("Save Army", save_army, tuple(), {"army": army}),
-        2: Option("Add Regiment", add_regiment),
-        3: Option("Update Existing Regiment", lambda: print("UPDATING REGIMENT...\n")),
-        4: Option("Exit", lambda: print("Exiting...\n")),
-    }
+
+
+
     answer: int = 0
     while answer != 4:
         answer = prompt_user(options)[0]
