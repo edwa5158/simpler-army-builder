@@ -1,10 +1,11 @@
+from typing import Callable
 class Option:
     def __init__(
         self,
         description: str = "",
-        func: callable = None,
-        args: tuple = None,
-        kwargs: dict = None,
+        func: Callable = lambda: None,
+        args: tuple = (),
+        kwargs: dict = {},
     ):
         self.description = description
         self.func = func
@@ -18,7 +19,7 @@ def prompt_user(options: dict[int, Option]) -> tuple[int, str]:
         key [int]: Option
     }
     """
-    if 0 in options.keys():
+    if 0 in options:
         raise ValueError("Cannot allow '0' as an option")
 
     # Build input prompt
@@ -30,13 +31,13 @@ def prompt_user(options: dict[int, Option]) -> tuple[int, str]:
     prompt += "\n"
 
     # Wait for valid response
-    while answer not in options.keys():
-        answer = input(prompt)
+    while answer not in options:
+        answer_in = input(prompt)
         try:
-            answer = int(answer)
+            answer = int(answer_in)
         except ValueError:
             answer = 0
-        if answer not in options.keys():
+        if answer not in options:
             print("Invalid option. Please try again.")
 
     # Take action, return answer

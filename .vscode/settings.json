@@ -3,5 +3,9 @@
         "."
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "edwa5158",
+        "projectKey": "edwa5158_simpler-army-builder"
+    }
 }

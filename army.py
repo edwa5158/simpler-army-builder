@@ -6,7 +6,8 @@ class Army:
         self.name = name
         self.regiments: list[Regiment] = []
         self._regiment_number = 0 
-    
+
+
     def to_dict(self): 
         return {"name": self.name, "regiments": self.regiments}
 
@@ -18,16 +19,18 @@ class Army:
         return regiment
     
     def save_army(self):
-        json_str = json.dumps(self.army, indent=4)
+        json_str = json.dumps(self, indent=4)
         with open("army.json", "w") as f:
             f.write(json_str)
         print("Army saved")
 
-    # TODO: Make this a class method so that I can load an army before I've created one.
     def load_army(self) -> tuple[bool, str]:
         try:
             with open("army.json", "r") as f:
-                self.army = json.load(f)
+                army_json = json.load(f)
+                self.name = army_json.get("name", None)
+                self.regiments = [Regiment(k) for k,v in army_json.get("regiments").items()]
+                
                 reason = ""
                 success = True
         except FileNotFoundError as e:
@@ -42,20 +45,5 @@ class Army:
 
 
 
-    answer: int = 0
-    while answer != 4:
-        answer = prompt_user(options)[0]
 
-
-def save_army(army: dict) -> None:
-    json_str = json.dumps(army, indent=4)
-    with open("army.json", "w") as f:
-        f.write(json_str)
-    print("Army saved")
-
-def load_army() -> dict:
-    with open("army.json", "r") as f:
-        army = json.load(f)
-    print(f"Loading army: {army.get('name', 'ERROR: army name not found')}\n")
-    build_army(army)
 
