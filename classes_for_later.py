@@ -1,20 +1,5 @@
 from __future__ import annotations
 
-class Warscroll:
-    def __init__(self, name: str):
-        self.name = name
-        self.points: int = 0
-
-class Unit:
-    def __init__(self):
-        self.warscroll = Warscroll()
-        self.wargear = ""
-
-
-    @classmethod
-    def from_warscroll(cls, warscroll) -> Unit:
-        unit = Unit()
-        unit.warscroll = warscroll
 
 
 class Regiment:

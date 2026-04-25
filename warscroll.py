@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
 
@@ -10,6 +12,14 @@ class Warscroll:
 
     def to_dict(self):
         return {"name": self.name, "points": self.points, "is_hero": self.is_hero}
+
+    @classmethod
+    def from_dict(cls, ws_dict) -> Warscroll:
+        return Warscroll(
+            ws_dict.get("name", ""),
+            ws_dict.get("points", 0),
+            ws_dict.get("is_hero", False)
+        )
 
     def __repr__(self):
         return json.dumps(self.to_dict())
@@ -44,8 +54,3 @@ class Warscrolls:
         name: str = warscroll["name"]
         self.catalog[name] = warscroll
         return self.catalog
-
-def append_warscroll(warscrolls, warscroll):
-    name: str = warscroll["name"]
-    warscrolls[name] = warscroll
-    return warscrolls

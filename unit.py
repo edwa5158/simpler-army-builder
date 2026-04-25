@@ -1,12 +1,25 @@
-from warscroll import load_warscrolls
+from __future__ import annotations
 
-def list_warscrolls():
-    warscrolls = load_warscrolls()
-    result = []
-    for k, ws in warscrolls:
-        result.append(f"{k}: ws")
-    
-def create_unit(warscroll: dict) -> dict:
+from warscroll import Warscroll
 
-    return {"warscroll": warscroll, "other_stuff": "tbd"}
 
+class Unit:
+    def __init__(self):
+        self.warscroll: Warscroll
+        self.wargear: str = ""
+
+    def to_dict(self) -> dict:
+        return {"warscroll": self.warscroll.to_dict(), "wargear": self.wargear}
+
+    @classmethod
+    def from_dict(cls, unit_dict) -> Unit:
+        unit = Unit()
+        unit.warscroll = Warscroll.from_dict(unit_dict.get("warscroll", {}))
+        unit.wargear = unit_dict.get("wargear", "")
+        return unit
+
+    @classmethod
+    def from_warscroll(cls, warscroll) -> Unit:
+        unit = Unit()
+        unit.warscroll = warscroll
+        return unit
