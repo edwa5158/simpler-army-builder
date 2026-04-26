@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TypedDict
 
 
 class Warscroll:
@@ -10,19 +11,25 @@ class Warscroll:
         self.points: int = points
         self.is_hero: bool = is_hero
 
-    def to_dict(self):
+    def to_dict(self) -> WarscrollDict:
         return {"name": self.name, "points": self.points, "is_hero": self.is_hero}
 
     @classmethod
-    def from_dict(cls, ws_dict) -> Warscroll:
+    def from_dict(cls, ws_dict: WarscrollDict) -> Warscroll:
         return Warscroll(
             ws_dict.get("name", ""),
             ws_dict.get("points", 0),
-            ws_dict.get("is_hero", False)
+            ws_dict.get("is_hero", False),
         )
 
     def __repr__(self):
         return json.dumps(self.to_dict())
+
+
+class WarscrollDict(TypedDict):
+    name: str
+    points: int
+    is_hero: bool
 
 
 class Warscrolls:
@@ -48,7 +55,6 @@ class Warscrolls:
 
     def list_warscrolls(self):
         return [f"{k}: {ws}" for k, ws in self.catalog.items()]
-    
 
     def append_warscroll(self, warscroll):
         name: str = warscroll["name"]

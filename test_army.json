@@ -1,175 +1,73 @@
 {
     "name": "army_01",
+    "_regiment_number": 2,
     "regiments": [
         {
             "name": "Regiment 00",
             "units": [
                 {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
+                    "unit": {
+                        "warscroll": {
+                            "name": "Clanrats",
+                            "points": 150,
+                            "is_hero": false
+                        },
+                        "wargear": ""
                     },
-                    "wargear": ""
+                    "unit_num": 0
                 },
                 {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
+                    "unit": {
+                        "warscroll": {
+                            "name": "Grey Seer",
+                            "points": 300,
+                            "is_hero": true
+                        },
+                        "wargear": ""
                     },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
+                    "unit_num": 1
                 }
-            ]
+            ],
+            "_unit_number": 2
         },
         {
             "name": "Regiment 01",
             "units": [
                 {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
+                    "unit": {
+                        "warscroll": {
+                            "name": "Clanrats",
+                            "points": 150,
+                            "is_hero": false
+                        },
+                        "wargear": ""
                     },
-                    "wargear": ""
+                    "unit_num": 0
                 },
                 {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
+                    "unit": {
+                        "warscroll": {
+                            "name": "Clanrats",
+                            "points": 150,
+                            "is_hero": false
+                        },
+                        "wargear": ""
                     },
-                    "wargear": ""
+                    "unit_num": 1
                 },
                 {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
+                    "unit": {
+                        "warscroll": {
+                            "name": "Grey Seer",
+                            "points": 300,
+                            "is_hero": true
+                        },
+                        "wargear": ""
                     },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Clanrats",
-                        "points": 150,
-                        "is_hero": false
-                    },
-                    "wargear": ""
-                },
-                {
-                    "warscroll": {
-                        "name": "Grey Seer",
-                        "points": 300,
-                        "is_hero": true
-                    },
-                    "wargear": ""
+                    "unit_num": 2
                 }
-            ]
+            ],
+            "_unit_number": 3
         }
     ]
 }

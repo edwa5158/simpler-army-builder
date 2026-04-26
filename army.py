@@ -13,7 +13,11 @@ class Army:
         self._regiment_number = 0
 
     def to_dict(self) -> dict:
-        return {"name": self.name, "regiments": [r.to_dict() for r in self.regiments]}
+        return {
+            "name": self.name,
+            "_regiment_number": self._regiment_number,
+            "regiments": [r.to_dict() for r in self.regiments],
+        }
 
     @classmethod
     def from_dict(cls, army_dict: dict) -> Army:
