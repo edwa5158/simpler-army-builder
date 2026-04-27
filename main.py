@@ -1,6 +1,7 @@
 import json
 
-from army import Army
+from army import Army, army_file_exists
+from config import ARMY_PATH
 from prompt_utils import Option, prompt_user
 from regiment import Regiment
 from warscroll import Warscroll, Warscrolls
@@ -86,19 +87,24 @@ def save_army(army: dict) -> None:
         f.write(json_str)
     print("Army saved")
 
+
 def new_army(army: Army) -> None:
     army.name = str(input("Enter a name for your army: "))
     print(f"You named your army {army.name}\n")
-    
+
 
 def load_army(army: Army) -> None:
-    with open("army.json", "r") as f:
+    if not army_file_exists():
+        print("No saved army files detected.")
+        return
+    
+    with open(ARMY_PATH, "r") as f:
         army = json.load(f)
     print(f"Loading army: {army.get('name', 'ERROR: army name not found')}\n")
 
 
 def main():
-    army: Army = Army("new_army") #temporary name that's overwritten
+    army: Army = Army("new_army")  # temporary name that's overwritten
 
     options: dict[int, Option] = {
         1: Option("New Army", new_army),
@@ -107,6 +113,7 @@ def main():
     }
     prompt_user(options)
     build_army(army)
+
 
 if __name__ == "__main__":
     main()

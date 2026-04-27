@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "prompt-toolkit>=3.0.52",
     "ruff>=0.15.11",
     "tools>=1.0.27",
 ]

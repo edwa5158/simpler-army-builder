@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 
 from config import ARMY_PATH
 from regiment import Regiment, regiments_from_dict
+
+
+def army_file_exists(army_path: str = ARMY_PATH) -> bool:
+    return os.path.exists(army_path)
 
 
 class Army:
@@ -32,12 +37,15 @@ class Army:
         self._regiment_number += 1
         return regiment
 
+    # TODO : Update this to allow saving multiple armies...
     def save_army(self, army_path: str = ARMY_PATH):
+        existing_army = 
         json_str = json.dumps(self.to_dict(), indent=4)
         with open(army_path, "w") as f:
             f.write(json_str)
         print(f"Army saved to {army_path}")
 
+    # TODO : Update this to return the list of armies for further selection
     def load_army(self, army_path: str = ARMY_PATH) -> tuple[bool, str]:
         try:
             with open(army_path, "r") as f:
