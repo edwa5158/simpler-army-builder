@@ -61,6 +61,6 @@ class RegimentDict(TypedDict):
     _unit_number: int
 
 
-def regiments_from_dict(regiments_json: list[dict]) -> list[Regiment]:
+def regiments_from_dict(regiments_json: list[RegimentDict]) -> list[Regiment]:
     regiments: list[Regiment] = [Regiment.from_dict(r) for r in regiments_json]
     return regiments

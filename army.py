@@ -2,13 +2,32 @@ from __future__ import annotations
 
 import json
 import os
+from typing import TypedDict
 
 from config import ARMY_PATH
-from regiment import Regiment, regiments_from_dict
+from regiment import Regiment, RegimentDict, regiments_from_dict
+
+
+class ArmyDict(TypedDict):
+    name: str
+    _regiment_number: int
+    regiments: list[RegimentDict]
+
+
+type ArmiesDict = dict[str, ArmyDict]
 
 
 def army_file_exists(army_path: str = ARMY_PATH) -> bool:
     return os.path.exists(army_path)
+
+
+def army_file_contents(army_path: str = ARMY_PATH) -> ArmiesDict | None:
+    if not army_file_exists(army_path):
+        return None
+
+    with open(army_path, "r") as f:
+        army_json: ArmiesDict = json.load(f)
+    return army_json
 
 
 class Army:
@@ -17,7 +36,7 @@ class Army:
         self.regiments: list[Regiment] = []
         self._regiment_number = 0
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> ArmyDict:
         return {
             "name": self.name,
             "_regiment_number": self._regiment_number,
@@ -25,9 +44,9 @@ class Army:
         }
 
     @classmethod
-    def from_dict(cls, army_dict: dict) -> Army:
+    def from_dict(cls, army_dict: ArmyDict) -> Army:
         army = Army(army_dict.get("name", ""))
-        army.regiments = regiments_from_dict(army_dict.get("regiments", []))
+        army.regiments = regiments_from_dict(army_dict["regiments"])
         return army
 
     def add_regiment(self) -> Regiment:
@@ -37,31 +56,23 @@ class Army:
         self._regiment_number += 1
         return regiment
 
-    # TODO : Update this to allow saving multiple armies...
-    def save_army(self, army_path: str = ARMY_PATH):
-        existing_army = 
-        json_str = json.dumps(self.to_dict(), indent=4)
+    def save_army(self, army_path: str = ARMY_PATH) -> ArmiesDict:
+        temp: ArmiesDict | None = army_file_contents(army_path)
+        armies: ArmiesDict = temp if temp is not None else {}
+        armies[self.name] = self.to_dict()
+
+        json_str = json.dumps(armies, indent=4)
+
+        # print(json_str)
         with open(army_path, "w") as f:
             f.write(json_str)
         print(f"Army saved to {army_path}")
+        return armies
 
-    # TODO : Update this to return the list of armies for further selection
-    def load_army(self, army_path: str = ARMY_PATH) -> tuple[bool, str]:
-        try:
-            with open(army_path, "r") as f:
-                army_json = json.load(f)
-                print(army_json)
+    def load_army(self, army_name: str, army_path: str = ARMY_PATH) -> ArmyDict | None:
+        army_json: ArmiesDict | None = army_file_contents(army_path)
 
-                army = Army.from_dict(army_json)
-                self.name = army.name
-                self.regiments = army.regiments
-
-                reason = ""
-                success = True
-        except FileNotFoundError as e:
-            reason = str(e)
-            success = False
-        except json.JSONDecodeError as e:
-            success = False
-            reason = str(e)
-        return success, reason
+        result: ArmyDict | None = army_json.get(army_name, None) if army_json else None
+        if not result:
+            print(f"An army named `{army_name}` could not be found.")
+        return result
