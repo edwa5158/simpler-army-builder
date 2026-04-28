@@ -1,19 +1,13 @@
 from __future__ import annotations
 
-# def main():
-#     army: Army = Army("new_army")  # temporary name that's overwritten
-#     options: dict[int, Option] = {
-#         1: Option("New Army", new_army),
-#         2: Option("Load Army", army.load_army),
-#         3: Option("Exit", lambda: print("Exiting...\n")),
-#     }
-#     prompt_user(options)
-#     build_army(army)
+from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
+from prompt_toolkit import print_formatted_text as print
 
-from army import Army, army_file_exists
-from main import load_army, new_army
+from army import ArmiesDict, Army, army_file_contents, army_file_exists
+from config import ARMY_PATH
+
 
 def army_selection():
     army = Army("new army")
@@ -38,15 +32,29 @@ def army_selection():
         default="new_army",
     )
     if result == new_army_option[0]:
-        new_army(army)
+        army.name = new_army()
     elif result == load_army_option[0]:
-        load_army(army)
-    else :
+        load_armies()
+    else:
         return
-    
+
+
+def new_army() -> str:
+    army_name = prompt(HTML("<u>Enter a name for your army:</u>    "))
+    print(HTML(f"You named your army <strong>{army_name}</strong>"))
+    return army_name
+
+
+def load_armies(army_path: str = ARMY_PATH) -> ArmiesDict | None:
+    if not army_file_exists():
+        print("No saved army files detected.")
+        return None
+
+    return army_file_contents(army_path=army_path)
 
 
 def main() -> None:
+    army_selection()
 
 
 if __name__ == "__main__":
