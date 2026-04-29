@@ -34,6 +34,7 @@ def army_selection():
     if result == new_army_option[0]:
         army.name = new_army()
     elif result == load_army_option[0]:
+        print("selected Load Armies")
         load_armies()
     else:
         return
@@ -45,12 +46,24 @@ def new_army() -> str:
     return army_name
 
 
-def load_armies(army_path: str = ARMY_PATH) -> ArmiesDict | None:
+def load_armies(army_path: str = ARMY_PATH) -> None:
+    print("starting Load Armies")
     if not army_file_exists():
         print("No saved army files detected.")
         return None
+    armies = army_file_contents(army_path=army_path)
+    if not armies:
+        print(f"No saved armies found in {army_path}")
+        return None
+        
+    army_names = [(key, key) for key in armies.keys()]
+    result: str = choice(
+        message = HTML("<u>Select an army: </u>"),
+        options = army_names
+    )
 
-    return army_file_contents(army_path=army_path)
+    print(HTML(f"You've selected <b>{result}</b>"))
+    
 
 
 def main() -> None:

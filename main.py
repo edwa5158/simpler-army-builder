@@ -1,7 +1,6 @@
 import json
 
-from army import ArmiesDict, Army, army_file_contents, army_file_exists
-from config import ARMY_PATH
+from army import Army
 from prompt_utils import Option, prompt_user
 from regiment import Regiment
 from warscroll import Warscroll, Warscrolls
@@ -86,10 +85,6 @@ def save_army(army: dict) -> None:
     with open("army.json", "w") as f:
         f.write(json_str)
     print("Army saved")
-
-
-
-
 
 
 def main():

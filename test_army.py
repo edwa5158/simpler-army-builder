@@ -187,4 +187,4 @@ def test_loading_from_multiple_armies():
     assert army.get("name", "") == "two_regiment_army"
     assert len(army.get("regiments", [])) == 2
 
-    delete_army_json_file()
+    # delete_army_json_file()
