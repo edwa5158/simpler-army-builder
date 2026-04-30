@@ -17,6 +17,26 @@ class Regiment:
 
         self._unit_number: int = num
 
+    @property
+    def points(self):
+        pts: int = 0
+        for unit_num in self.units:
+            pts += unit_num.unit.points
+        return pts
+
+    def regiment_header(self) -> str:
+        """Return a 'header' for the regiment display, limited to 120 characters"""
+        header_name = self.name
+        points = f"{0:04d} Points"
+        min_spacing = 4
+        max_length = 75
+
+        max_name_length = max_length - len(points) - min_spacing
+        if len(header_name) > max_name_length:
+            header_name = header_name[:max_name_length]
+        padding = max_length - len(points) - len(header_name)
+        return header_name + " " * padding + points
+
     def add_unit(self, unit: Unit) -> None:
         self.units.append(UnitNumbered(unit, self._unit_number))
         self._unit_number += 1

@@ -20,7 +20,6 @@ type ArmiesDict = dict[str, ArmyDict]
 def army_file_exists(army_path: str = ARMY_PATH) -> bool:
     return os.path.exists(army_path)
 
-
 def army_file_contents(army_path: str = ARMY_PATH) -> ArmiesDict | None:
     if not army_file_exists(army_path):
         return None
