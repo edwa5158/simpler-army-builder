@@ -13,7 +13,8 @@
                                 "points": 150,
                                 "is_hero": false
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 150
                         },
                         "unit_num": 0
                     },
@@ -24,7 +25,8 @@
                                 "points": 300,
                                 "is_hero": true
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 300
                         },
                         "unit_num": 1
                     }
@@ -47,7 +49,8 @@
                                 "points": 150,
                                 "is_hero": false
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 150
                         },
                         "unit_num": 0
                     },
@@ -58,7 +61,8 @@
                                 "points": 300,
                                 "is_hero": true
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 300
                         },
                         "unit_num": 1
                     }
@@ -75,7 +79,8 @@
                                 "points": 150,
                                 "is_hero": false
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 150
                         },
                         "unit_num": 0
                     },
@@ -86,7 +91,8 @@
                                 "points": 150,
                                 "is_hero": false
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 150
                         },
                         "unit_num": 1
                     },
@@ -97,7 +103,8 @@
                                 "points": 300,
                                 "is_hero": true
                             },
-                            "wargear": ""
+                            "wargear": "",
+                            "points": 300
                         },
                         "unit_num": 2
                     }

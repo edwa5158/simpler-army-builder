@@ -68,7 +68,8 @@ class Army:
         print(f"Army saved to {army_path}")
         return armies
 
-    def load_army(self, army_name: str, army_path: str = ARMY_PATH) -> ArmyDict | None:
+    @classmethod
+    def load_army(cls, army_name: str, army_path: str = ARMY_PATH) -> ArmyDict | None:
         army_json: ArmiesDict | None = army_file_contents(army_path)
 
         result: ArmyDict | None = army_json.get(army_name, None) if army_json else None

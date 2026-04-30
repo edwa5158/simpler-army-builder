@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TypedDict
 
 from unit import Unit, UnitNumbered, UnitNumDict
-
+from shared import header_line, points_text
 
 class Regiment:
     def __init__(self, name: str, units: list[Unit] = []):
@@ -25,17 +25,19 @@ class Regiment:
         return pts
 
     def regiment_header(self) -> str:
-        """Return a 'header' for the regiment display, limited to 120 characters"""
-        header_name = self.name
-        points = f"{0:04d} Points"
-        min_spacing = 4
-        max_length = 75
+        # """Return a 'header' for the regiment display, limited to 120 characters"""
+        # header_name = self.name
+        # points = points_text(self.points)
+        # min_spacing = 4
+        # max_length = 75
 
-        max_name_length = max_length - len(points) - min_spacing
-        if len(header_name) > max_name_length:
-            header_name = header_name[:max_name_length]
-        padding = max_length - len(points) - len(header_name)
-        return header_name + " " * padding + points
+        # max_name_length = max_length - len(points) - min_spacing
+        # if len(header_name) > max_name_length:
+        #     header_name = header_name[:max_name_length]
+        # padding = max_length - len(points) - len(header_name)
+        # return header_name + " " * padding + points
+
+        return header_line(self.name, self.points)
 
     def add_unit(self, unit: Unit) -> None:
         self.units.append(UnitNumbered(unit, self._unit_number))
