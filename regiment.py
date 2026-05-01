@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TypedDict
 
 from unit import Unit, UnitNumbered, UnitNumDict
-from shared import header_line, points_text
+from shared import header_line
 
 class Regiment:
     def __init__(self, name: str, units: list[Unit] = []):

@@ -38,7 +38,7 @@ def army_selection() -> Army | None:
         return None
 
 
-def new_army() -> Army: 
+def new_army() -> Army:
     army_name = prompt(HTML("<u>Enter a name for your army:</u>    "))
     print(HTML(f"You named your army <strong>{army_name}</strong>"))
     return Army(army_name)
@@ -62,9 +62,11 @@ def load_armies(army_path: str = ARMY_PATH) -> Army | None:
 
 
 def main() -> None:
-    army = army_selection()
-    from regiment_ui import list_regiments
-    list_regiments(army)
+    army = army_selection() or Army("new_army")
+    import regiment_ui as rui
+
+    regiment = rui.regiment_selection_menu(army)
+    
 
 if __name__ == "__main__":
     main()

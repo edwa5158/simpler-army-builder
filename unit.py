@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from shared import points_text
+from shared import body_row, points_text
 from warscroll import Warscroll, WarscrollDict
 
 
@@ -20,18 +20,7 @@ class Unit:
         }
 
     def unit_row(self):
-        """Return a 'row' for the unit display, limited to 75 characters"""
-        indent = 2
-        header_name = " " * indent + self.warscroll.name
-        points = points_text(self.points)
-        min_spacing = 4
-        max_length = 75
-
-        max_name_length = max_length - len(points) - min_spacing
-        if len(header_name) > max_name_length:
-            header_name = header_name[:max_name_length]
-        padding = max_length - len(points) - len(header_name)
-        return header_name + " " * padding + points
+        return body_row(self.warscroll.name, self.points)
 
     @classmethod
     def from_dict(cls, unit_dict: UnitDict) -> Unit:
