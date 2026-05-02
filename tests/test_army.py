@@ -1,10 +1,9 @@
 import os
 
-from army import ArmiesDict, Army
-from unit import Unit
-from warscroll import Warscroll
-
-TEST_ARMY_PATH = "test_army.json"
+from config import TEST_ARMY_PATH
+from infrastructure.army import ArmiesDict, Army
+from infrastructure.unit import Unit
+from infrastructure.warscroll import Warscroll
 
 army_name = "army_01"
 reg_name_01 = "Regiment 00"

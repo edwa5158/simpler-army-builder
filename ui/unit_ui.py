@@ -3,9 +3,9 @@ from __future__ import annotations
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
-from regiment import Regiment
-from unit import Unit, UnitNumbered
-from warscroll_ui import warscroll_selection
+from infrastructure.regiment import Regiment
+from infrastructure.unit import Unit, UnitNumbered
+from ui.warscroll_ui import warscroll_selection
 
 
 def unit_selection_menu(regiment: Regiment) -> UnitNumbered:

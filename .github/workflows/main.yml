@@ -40,10 +40,16 @@ jobs:
         run: uv sync --no-build --locked --dev
 
       - name: Lint with ruff
-        run: uv run --no-build --frozen ruff check .
+        run: uv run --no-build --frozen ruff check core infrastructure ui tests main.py config.py
+
+      - name: Type check with ty
+        run: uv run --no-build --frozen ty check .
+
+      - name: Type check with pyrefly
+        run: uv run --no-build --frozen pyrefly check .
 
       - name: Test with pytest
-        run: uv run --no-build --frozen pytest
+        run: uv run --no-build --frozen pytest tests
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4

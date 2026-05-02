@@ -1,0 +1,123 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+    A(["Start app"]) --> B["main()"] --> INIT["Load config/data dirs"] --> MM{"Main menu"}
+
+    subgraph TopLevel["Top-level Navigation"]
+        MM -->|Manage armies| C["army_selection()"]
+        MM -->|Manage warscrolls| WMenu["warscroll_menu()"]
+        MM -->|Exit| X{"Unsaved changes?"}
+        X -->|No| END(["Exit app"])
+        X -->|Yes| XS{"Save before exit?"}
+        XS -->|Save| XSave["save changes"] --> XOK{"Save OK?"}
+        XOK -->|Yes| END
+        XOK -->|No| ERR["Show error"] --> XS
+        XS -->|Discard| END
+        XS loopExitCancel@-->|Cancel| MM
+    end
+
+    subgraph ArmyMgmt["Army Management"]
+        C -->|new_army| D["new_army()"] --> AV{"Valid?"}
+        AV -->|No| ERR
+        AV -->|Yes| G["Army selected"]
+        C -->|load_army| E["load_armies()"] --> E1{"Army files exist?"}
+        E1 -->|No| EMPTY["Show empty state"] --> C
+        E1 -->|Yes| E2["Select army file"] --> E3{"Load OK?"}
+        E3 -->|No| ERR
+        E3 -->|Yes| G
+        C -->|delete_army| AD["Select army to delete"] --> ADC{"Confirm delete?"}
+        ADC -->|Cancel| C
+        ADC -->|Delete| ADD["delete_army_file()"] --> ADOK{"Delete OK?"}
+        ADOK -->|No| ERR
+        ADOK -->|Yes| C
+        C loopArmyBack@-->|Back| MM
+    end
+
+    subgraph RegimentMgmt["Regiment Management"]
+        G --> H["regiment_selection_menu(army)"]
+        H -->|existing regiment| I["Use selected regiment"]
+        H -->|new_regiment| J["army.add_regiment()"] --> RV{"Valid?"}
+        RV -->|No| ERR
+        RV -->|Yes| I
+        H -->|delete_regiment| RD["Select regiment to delete"] --> RDE{"Regiments exist?"}
+        RDE -->|No| EMPTY
+        RDE -->|Yes| RDC{"Confirm delete?"}
+        RDC -->|Cancel| H
+        RDC -->|Delete| RDel["army.remove_regiment()"] --> H
+        H loopRegBack@-->|Back| MM
+    end
+
+    subgraph UnitMgmt["Unit Management"]
+        I --> K["unit_selection_menu(regiment)"]
+        K -->|existing unit| L["Use selected unit"]
+        K -->|new_unit| M["new_unit()"]
+        K -->|delete_unit| UD["Select unit to delete"] --> UDE{"Units exist?"}
+        UDE -->|No| EMPTY
+        UDE -->|Yes| UDC{"Confirm delete?"}
+        UDC -->|Cancel| K
+        UDC -->|Delete| UDel["regiment.remove_unit()"] --> K
+        K loopUnitBackReg@-->|Back to regiments| H
+        K loopUnitBackMain@-->|Back to main| MM
+    end
+
+    subgraph NewUnitFlow["Create Unit from Warscroll"]
+        M --> M2["warscroll_selection()"] --> M2E{"Warscrolls exist?"}
+        M2E -->|Yes| M2S["Select warscroll"] --> M3["Unit.from_warscroll(ws)"]
+        M2E -->|No| M2C{"Create warscroll now?"}
+        M2C -->|No| K
+        M2C -->|Yes| WNewU["create_warscroll()"] --> WUV{"Valid?"}
+        WUV -->|No| ERR
+        WUV -->|Yes| WSaveU["save_warscroll()"] --> WUOK{"Save OK?"}
+        WUOK -->|No| ERR
+        WUOK -->|Yes| M3
+        M3 --> N["regiment.add_unit(unit)"] --> UV{"Unit valid?"}
+        UV -->|No| ERR
+        UV -->|Yes| L
+    end
+
+    subgraph UnitEdit["Unit Editing"]
+        L --> O["unit_edit_menu(unit)"]
+        O -->|view| OV["display_unit(unit)"] --> O
+        O -->|edit stats/options| OE["edit_unit(unit)"] --> OEV{"Valid changes?"}
+        OEV -->|No| ERR
+        OEV -->|Yes| DIRTY["Mark army dirty"] --> O
+        O -->|change warscroll| OW["warscroll_selection()"] --> OWE{"Warscrolls exist?"}
+        OWE -->|No| EMPTY
+        OWE -->|Yes| OW2["unit.apply_warscroll(ws)"] --> DIRTY
+        O -->|save army| Q["army.save_army()"] --> QOK{"Save OK?"}
+        QOK -->|No| ERR
+        QOK -->|Yes| CLEAN["Clear dirty flag"] --> O
+        O loopEditBackUnit@-->|Back to units| K
+        O loopEditBackReg@-->|Back to regiments| H
+        O loopEditBackMain@-->|Back to main| MM
+    end
+
+    subgraph WarscrollMgmt["Warscroll Management"]
+        WMenu -->|view| WV["display_warscrolls()"] --> WMenu
+        WMenu -->|add| WA["create_warscroll()"] --> WAV{"Valid?"}
+        WAV -->|No| ERR
+        WAV -->|Yes| WS["save_warscroll()"] --> WMenu
+        WMenu -->|edit| WE["select_warscroll()"] --> WEE{"Warscrolls exist?"}
+        WEE -->|No| EMPTY
+        WEE -->|Yes| WEdit["edit_warscroll(ws)"] --> WEV{"Valid changes?"}
+        WEV -->|No| ERR
+        WEV -->|Yes| WS2["save_warscroll()"] --> WMenu
+        WMenu -->|delete| WD["select_warscroll()"] --> WDE{"Warscrolls exist?"}
+        WDE -->|No| EMPTY
+        WDE -->|Yes| WDC{"Confirm delete?"}
+        WDC -->|Cancel| WMenu
+        WDC -->|Delete| WDel["delete_warscroll()"] --> WMenu
+        WMenu loopWsBack@-->|Back| MM
+    end
+
+    classDef destructive fill:#FFEBEE,stroke:#C62828,color:#B71C1C;
+    classDef feedback fill:#FCE4EC,stroke:#AD1457,color:#880E4F;
+    classDef success fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef loopEdge stroke:#FB8C00,stroke-width:3px;
+
+    class AD,RD,UD,WD,ADD,RDel,UDel,WDel destructive;
+    class ERR,EMPTY feedback;
+    class G,I,L,DIRTY,CLEAN success;
+    class loopExitCancel,loopArmyBack,loopRegBack,loopUnitBackReg,loopUnitBackMain,loopEditBackUnit,loopEditBackReg,loopEditBackMain,loopWsBack loopEdge;

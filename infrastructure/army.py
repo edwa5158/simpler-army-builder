@@ -5,7 +5,7 @@ import os
 from typing import TypedDict
 
 from config import ARMY_PATH
-from regiment import Regiment, RegimentDict, regiments_from_dict
+from infrastructure.regiment import Regiment, RegimentDict, regiments_from_dict
 
 
 class ArmyDict(TypedDict):

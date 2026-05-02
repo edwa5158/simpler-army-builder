@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from shared import header_line
-from unit import Unit, UnitNumbered, UnitNumDict
+from core.shared import header_line
+from infrastructure.unit import Unit, UnitNumbered, UnitNumDict
 
 
 class Regiment:

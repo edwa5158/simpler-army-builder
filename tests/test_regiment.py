@@ -1,6 +1,6 @@
-from regiment import Regiment
-from unit import Unit
-from warscroll import Warscroll
+from infrastructure.regiment import Regiment
+from infrastructure.unit import Unit
+from infrastructure.warscroll import Warscroll
 
 ws1 = Warscroll("Clanrats", 150, False)
 ws2 = Warscroll("Grey Seer", 300, True)

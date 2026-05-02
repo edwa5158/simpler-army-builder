@@ -4,9 +4,9 @@ from prompt_toolkit import print_formatted_text as print
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
-from army import Army
-from regiment import Regiment
-from shared import header_underline
+from infrastructure.army import Army
+from infrastructure.regiment import Regiment
+from core.shared import header_underline
 
 
 def list_regiments(army: Army) -> tuple[list[tuple[str, str]], dict[str, Regiment]]:
@@ -38,7 +38,7 @@ def regiment_selection_menu(army: Army) -> Regiment:
     )
     print("\n")
 
-    print(HTML(f"You selected <b>{result}</b>"))
+    print(HTML(f"You selected <b>{result}</b>\n"))
     return army.add_regiment() if result == "new_regiment" else regiment_dict[result]
 
 

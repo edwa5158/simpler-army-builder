@@ -1,4 +1,4 @@
-from warscroll import Warscrolls, WarscrollsDict
+from infrastructure.warscroll import Warscrolls, WarscrollsDict
 
 
 def warscroll_selection():

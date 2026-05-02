@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from shared import body_row
-from warscroll import Warscroll, WarscrollDict
+from core.shared import body_row
+from infrastructure.warscroll import Warscroll, WarscrollDict
 
 
 class Unit:

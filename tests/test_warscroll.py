@@ -1,17 +1,18 @@
 import os
-
-from shared import delete_file_if_it_exists
-from warscroll import Warscroll, Warscrolls
 from pprint import pformat
+
+from config import TEST_WARSCROLL_PATH
+from core.shared import delete_file_if_it_exists
+from infrastructure.warscroll import Warscroll, Warscrolls
 
 ws1 = Warscroll("Clanrats", 150, False)
 ws2 = Warscroll("Grey Seer", 300, True)
 ws3 = Warscroll("Ratling Gun", 200, False)
 
-TEST_WARSCROLL_PATH = "test_warscroll.json"
 
 def delete_warscrolls():
     delete_file_if_it_exists(TEST_WARSCROLL_PATH)
+
 
 def warscrolls_setup() -> Warscrolls:
     warscrolls = Warscrolls()
@@ -39,7 +40,7 @@ def test_warscrolls_load():
     warscrolls = warscrolls_setup()
     warscrolls.save_warscrolls()
 
-    #act
+    # act
     new_warscrolls = Warscrolls.load_warscrolls()
 
     # assert
@@ -49,11 +50,12 @@ def test_warscrolls_load():
     # cleanup
     delete_warscrolls()
 
+
 def test_warscrolls_load_with_no_file():
     # arrange
     delete_warscrolls()
 
-    #act
+    # act
     warscrolls = Warscrolls.load_warscrolls(TEST_WARSCROLL_PATH)
 
     # assert
@@ -62,6 +64,7 @@ def test_warscrolls_load_with_no_file():
     # cleanup
     delete_warscrolls()
 
+
 def test_print_warscrolls_prints_serialized_catalog(capsys):
     warscrolls = warscrolls_setup()
     warscrolls.print_warscrolls()
@@ -69,12 +72,13 @@ def test_print_warscrolls_prints_serialized_catalog(capsys):
     captured = capsys.readouterr()
 
     assert captured.out == pformat(warscrolls.serialized_catalog) + "\n"
-    assert captured.err == "" 
+    assert captured.err == ""
+
 
 def test_warscrolls_from_dict():
 
     delete_warscrolls()
-    
+
     warscrolls_og = warscrolls_setup()
     warscrolls_dict = warscrolls_og.serialized_catalog
 

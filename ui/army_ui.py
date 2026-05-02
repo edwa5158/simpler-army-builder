@@ -5,8 +5,8 @@ from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
-from army import ArmiesDict, Army, army_file_contents, army_file_exists
 from config import ARMY_PATH
+from infrastructure.army import ArmiesDict, Army, army_file_contents, army_file_exists
 
 
 def army_selection() -> Army | None:
@@ -63,10 +63,10 @@ def load_armies(army_path: str = ARMY_PATH) -> Army | None:
 
 def main() -> None:
     army = army_selection() or Army("new_army")
-    import regiment_ui as rui
+    import ui.regiment_ui as rui
 
     _ = rui.regiment_selection_menu(army)
-    
+
 
 if __name__ == "__main__":
     main()

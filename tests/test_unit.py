@@ -1,5 +1,5 @@
-from unit import Unit
-from warscroll import Warscroll, WarscrollDict
+from infrastructure.unit import Unit
+from infrastructure.warscroll import Warscroll, WarscrollDict
 
 ws1 = Warscroll("Clanrats", 150, False)
 ws2 = Warscroll("Grey Seer", 300, True)

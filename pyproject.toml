@@ -21,9 +21,10 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["."]
+testpaths = ["tests"]
 addopts = """
---cov=.
+--cov=core
+--cov=infrastructure
 --cov-report=term-missing
 --cov-report=xml:coverage.xml
 --cov-config=pyproject.toml
@@ -33,7 +34,7 @@ cache_dir = ".cache/pytest"
 
 [tool.coverage.run]
 branch = true
-source = ["."]
+source = ["core", "infrastructure"]
 omit = [
     "**/*_ui.py",
     "test_*.py",
