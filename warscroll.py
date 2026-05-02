@@ -58,10 +58,7 @@ class Warscrolls:
     def print_warscrolls(self) -> None:
         from pprint import pprint
 
-        pprint(self.catalog)
-
-    def list_warscrolls(self):
-        return [f"{k}: {ws}" for k, ws in self.catalog.items()]
+        pprint(self.serialized_catalog)
 
     def append_warscroll(self, warscroll: Warscroll):
         name: str = warscroll.name
