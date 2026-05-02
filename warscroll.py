@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
+from config import WARSCROLL_PATH
+
 
 class Warscroll:
     def __init__(self, name: str, points: int, is_hero: bool):
@@ -35,18 +37,23 @@ class WarscrollDict(TypedDict):
 class Warscrolls:
     def __init__(self):
         self.catalog: dict[str, Warscroll] = {}
-        self.warcrolls_file: str = "warscrolls.json"
+        self.serialized_catalog: dict[str, WarscrollDict] = {}
+        self.warcrolls_file: str = WARSCROLL_PATH
 
-    def load_warscrolls(self) -> dict:
-        fp = self.warcrolls_file
+    @classmethod
+    def load_warscrolls(
+        cls, warscroll_path: str = WARSCROLL_PATH
+    ) -> dict[str, Warscroll]:
+        fp = warscroll_path
+        catalog: dict[str, Warscroll] = {}
         if Path(fp).exists():
             with open(fp, "r") as f:
-                self.catalog = json.load(f)
-        return self.catalog
+                catalog = json.load(f)
+        return catalog
 
     def save_warscrolls(self) -> None:
         with open(self.warcrolls_file, "w") as f:
-            f.write(json.dumps(self.catalog))
+            f.write(json.dumps(self.serialized_catalog))
 
     def print_warscrolls(self) -> None:
         from pprint import pprint
@@ -56,7 +63,8 @@ class Warscrolls:
     def list_warscrolls(self):
         return [f"{k}: {ws}" for k, ws in self.catalog.items()]
 
-    def append_warscroll(self, warscroll):
-        name: str = warscroll["name"]
+    def append_warscroll(self, warscroll: Warscroll):
+        name: str = warscroll.name
         self.catalog[name] = warscroll
+        self.serialized_catalog[name] = warscroll.to_dict()
         return self.catalog

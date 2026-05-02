@@ -4,6 +4,13 @@ max_length = 75
 indent = 2
 
 
+def delete_file_if_it_exists(file_path: str) -> None:
+    import os
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+
 def points_text(num_points: int, num_places: int = 4) -> str:
     points = f"{num_points}"
     points = (num_places - len(points)) * " " + points + " Points"
