@@ -65,7 +65,7 @@ def main() -> None:
     army = army_selection() or Army("new_army")
     import regiment_ui as rui
 
-    regiment = rui.regiment_selection_menu(army)
+    _ = rui.regiment_selection_menu(army)
     
 
 if __name__ == "__main__":

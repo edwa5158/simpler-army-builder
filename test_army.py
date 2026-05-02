@@ -134,7 +134,7 @@ def test_load_with_two_regiments():
     army_dict = army.load_army(army_name, TEST_ARMY_PATH)
     if army_dict is None:
         raise ValueError
-    army = army.from_dict(army_dict)    
+    army = army.from_dict(army_dict)
 
     assert army.name == army_name
     assert len(army.regiments) == 2
@@ -177,7 +177,7 @@ def test_loading_from_multiple_armies():
     army_02.name = "two_regiment_army"
 
     _ = army_01.save_army(TEST_ARMY_PATH)
-    armies = army_02.save_army(TEST_ARMY_PATH)
+    _ = army_02.save_army(TEST_ARMY_PATH)
 
     army_one = Army("").load_army("one_regiment_army", TEST_ARMY_PATH) or {}
     assert army_one.get("name", "") == "one_regiment_army"

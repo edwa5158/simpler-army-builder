@@ -1,6 +1,3 @@
-from turtle import left
-
-
 left_side_of_regiment = 6
 min_spacing = 4
 max_length = 75
@@ -35,6 +32,7 @@ def body_row(row_name: str, points_value: int) -> str:
         header_name = header_name[:max_name_length]
     padding = max_length - len(points) - len(header_name)
     return header_name + " " * padding + points
+
 
 def header_underline():
     padding = left_side_of_regiment

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from shared import body_row, points_text
+from shared import body_row
 from warscroll import Warscroll, WarscrollDict
 
 
