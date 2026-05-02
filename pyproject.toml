@@ -27,13 +27,14 @@ addopts = """
 --cov-report=term-missing
 --cov-report=xml:coverage.xml
 --cov-config=pyproject.toml
+--ignore-glob=**/*_ui.py
 """
 cache_dir = ".cache/pytest"
 
 [tool.coverage.run]
 branch = true
 source = ["."]
-omit = []
+omit = ["**/*_ui.py"]
 data_file = ".cache/coverage/coverage.db"
 
 [tool.coverage.report]
