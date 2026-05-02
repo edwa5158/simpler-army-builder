@@ -34,7 +34,13 @@ cache_dir = ".cache/pytest"
 [tool.coverage.run]
 branch = true
 source = ["."]
-omit = ["**/*_ui.py"]
+omit = [
+    "**/*_ui.py",
+    "test_*.py",
+    "tests_*.py",
+    "**/test_*.py",
+    "**/tests_*.py",
+]
 data_file = ".cache/coverage/coverage.db"
 
 [tool.coverage.report]
