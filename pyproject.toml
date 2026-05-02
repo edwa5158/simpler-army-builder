@@ -13,6 +13,44 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pyrefly>=0.63.1",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
+    "ty>=0.0.34",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["."]
+addopts = """
+--cov=.
+--cov-report=term-missing
+--cov-report=xml:coverage.xml
+--cov-config=pyproject.toml
+"""
+cache_dir = ".cache/pytest"
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = []
+data_file = ".cache/coverage/coverage.db"
+
+[tool.coverage.report]
+fail_under = 70
+exclude_also = [
+    "def __repr__",
+    "if self\\.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+
+[tool.coverage.html]
+directory = ".cache/coverage/html"
+
+[tool.ruff]
+cache-dir = ".cache/ruff"
