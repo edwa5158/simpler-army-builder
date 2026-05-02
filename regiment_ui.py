@@ -14,7 +14,7 @@ def list_regiments(army: Army) -> tuple[list[tuple[str, str]], dict[str, Regimen
     options: list[tuple[str, str]] = []
     regiment_dict: dict[str, Regiment] = {}
     for regiment in army.regiments:
-        regiment_option = regiment.regiment_header()
+        regiment_option = regiment.header()
         regiment_option += "\n"
         regiment_option += header_underline()
         regiment_option += "\n"

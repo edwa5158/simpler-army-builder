@@ -25,7 +25,7 @@ class Regiment:
             pts += unit_num.unit.points
         return pts
 
-    def regiment_header(self) -> str:
+    def header(self) -> str:
         return header_line(self.name, self.points)
 
     def add_unit(self, unit: Unit) -> None:
