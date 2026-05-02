@@ -1,7 +1,7 @@
 import os
 
 from shared import delete_file_if_it_exists
-from warscroll import Warscroll, Warscrolls, WarscrollsDict
+from warscroll import Warscroll, Warscrolls
 from pprint import pformat
 
 ws1 = Warscroll("Clanrats", 150, False)

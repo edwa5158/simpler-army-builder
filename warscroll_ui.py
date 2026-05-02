@@ -1,8 +1,8 @@
-from warscroll import Warscroll, Warscrolls
+from warscroll import Warscrolls, WarscrollsDict
 
 
 def warscroll_selection():
-    warscrolls: dict[str, Warscroll] = Warscrolls.load_warscrolls()
+    warscrolls: WarscrollsDict = Warscrolls.load_warscrolls()
 
     for warscroll in warscrolls:
         print(warscroll)
