@@ -37,13 +37,13 @@ jobs:
             uv.lock
 
       - name: Install the project
-        run: uv sync --locked --dev
+        run: uv sync --no-build --locked --dev
 
       - name: Lint with ruff
-        run: uv run --frozen ruff check .
+        run: uv run --no-build --frozen ruff check .
 
       - name: Test with pytest
-        run: uv run --frozen pytest
+        run: uv run --no-build --frozen pytest
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
