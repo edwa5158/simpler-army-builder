@@ -37,6 +37,13 @@ class Unit:
         unit.points = warscroll.points
         return unit
 
+    def __eq__(self, other: Unit) -> bool:  # type: ignore
+        return (
+            self.warscroll == other.warscroll
+            and self.wargear == other.wargear
+            and self.points == other.points
+        )
+
 
 class UnitNumbered:
     def __init__(self, unit: Unit, unit_num: int):

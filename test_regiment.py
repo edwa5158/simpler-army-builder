@@ -1,4 +1,3 @@
-from army import Army
 from regiment import Regiment
 from unit import Unit
 from warscroll import Warscroll

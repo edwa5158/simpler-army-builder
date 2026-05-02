@@ -52,3 +52,9 @@ def test_from_dict_to_dict():
     ws_new = Warscroll.from_dict(ws_dict)
 
     assert ws_new == ws1
+
+def test_equality():
+    unit1, unit2, _ , _ = setup_units()
+
+    assert unit1 == unit1
+    assert unit1 != unit2
