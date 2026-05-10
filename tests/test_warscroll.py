@@ -38,10 +38,10 @@ def test_warscrolls_load():
     # arrange
     delete_warscrolls()
     warscrolls = warscrolls_setup()
-    warscrolls.save_warscrolls()
+    warscrolls.save_warscrolls(TEST_WARSCROLL_PATH)
 
     # act
-    new_warscrolls = Warscrolls.load_warscrolls()
+    new_warscrolls = Warscrolls.load_warscrolls(TEST_WARSCROLL_PATH)
 
     # assert
     assert len(new_warscrolls) == len(warscrolls.catalog)

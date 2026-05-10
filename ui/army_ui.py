@@ -5,11 +5,20 @@ from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
-from config import ARMY_PATH
-from infrastructure.army import ArmiesDict, Army, army_file_contents, army_file_exists
+from infrastructure.army import ArmiesDict, Army, army_file_exists
+from infrastructure.army import load_armies as army_file_contents
 
 
-def army_selection() -> Army | None:
+def army_menu(army_path: str) -> str:
+    raise NotImplementedError()
+
+    # View Armies?
+    # Delete Army
+    # New Army
+    return ""
+
+
+def army_selection(army_path: str) -> Army | None:
     new_army_option: tuple[str, str] = ("new_army", "New Army")
     load_army_option: tuple[str, str] = ("load_army", "Load Army")
     exit_option: tuple[str, str] = ("exit", "Exit")
@@ -19,7 +28,7 @@ def army_selection() -> Army | None:
         exit_option,
     ]
 
-    if not army_file_exists():
+    if not army_file_exists(army_path):
         options.remove(load_army_option)
 
     result: str = choice(
@@ -32,7 +41,7 @@ def army_selection() -> Army | None:
     if result == new_army_option[0]:
         return new_army()
     elif result == load_army_option[0]:
-        army = load_armies()
+        army = load_armies(army_path)
         return army
     else:
         return None
@@ -44,8 +53,8 @@ def new_army() -> Army:
     return Army(army_name)
 
 
-def load_armies(army_path: str = ARMY_PATH) -> Army | None:
-    if not army_file_exists():
+def load_armies(army_path: str) -> Army | None:
+    if not army_file_exists(army_path):
         print("No saved army files detected.")
         return None
     armies: ArmiesDict | None = army_file_contents(army_path=army_path)
@@ -62,10 +71,9 @@ def load_armies(army_path: str = ARMY_PATH) -> Army | None:
 
 
 def main() -> None:
-    army = army_selection() or Army("new_army")
     import ui.regiment_ui as rui
 
-    _ = rui.regiment_selection_menu(army)
+    _ = rui.regiment_selection_menu(Army("new_army"))
 
 
 if __name__ == "__main__":

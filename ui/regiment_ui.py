@@ -4,9 +4,9 @@ from prompt_toolkit import print_formatted_text as print
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
+from core.shared import header_underline
 from infrastructure.army import Army
 from infrastructure.regiment import Regiment
-from core.shared import header_underline
 
 
 def list_regiments(army: Army) -> tuple[list[tuple[str, str]], dict[str, Regiment]]:

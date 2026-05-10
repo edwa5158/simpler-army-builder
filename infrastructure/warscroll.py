@@ -1,11 +1,30 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import TypedDict
 
-from config import WARSCROLL_PATH
 
+class WarscrollDict(TypedDict):
+    name: str
+    points: int
+    is_hero: bool
+
+
+type WarscrollsDict = dict[str, WarscrollDict]
+
+
+def warscroll_file_exists(warscroll_path: str) -> bool:
+    return os.path.exists(warscroll_path)
+
+def load_warscrolls(warscroll_path: str) -> WarscrollsDict | None:
+    if not warscroll_file_exists(warscroll_path):
+        return None
+
+    with open(warscroll_path, "r") as f:
+        warscrolls_json: WarscrollsDict = json.load(f)
+    return warscrolls_json
 
 class Warscroll:
     def __init__(self, name: str, points: int, is_hero: bool):
@@ -35,22 +54,13 @@ class Warscroll:
         )
 
 
-class WarscrollDict(TypedDict):
-    name: str
-    points: int
-    is_hero: bool
-
-
-type WarscrollsDict = dict[str, WarscrollDict]
-
-
 class Warscrolls:
     def __init__(self):
         self.catalog: dict[str, Warscroll] = {}
         self.serialized_catalog: WarscrollsDict = {}
 
     @classmethod
-    def load_warscrolls(cls, warscroll_path: str = WARSCROLL_PATH) -> WarscrollsDict:
+    def load_warscrolls(cls, warscroll_path: str) -> WarscrollsDict:
         fp = warscroll_path
         catalog: WarscrollsDict = {}
         if Path(fp).exists():
@@ -58,7 +68,7 @@ class Warscrolls:
                 catalog = json.load(f)
         return catalog
 
-    def save_warscrolls(self, warscrolls_file: str = WARSCROLL_PATH) -> None:
+    def save_warscrolls(self, warscrolls_file: str) -> None:
         with open(warscrolls_file, "w") as f:
             f.write(json.dumps(self.serialized_catalog))
 

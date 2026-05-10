@@ -4,7 +4,6 @@ import json
 import os
 from typing import TypedDict
 
-from config import ARMY_PATH
 from infrastructure.regiment import Regiment, RegimentDict, regiments_from_dict
 
 
@@ -17,11 +16,11 @@ class ArmyDict(TypedDict):
 type ArmiesDict = dict[str, ArmyDict]
 
 
-def army_file_exists(army_path: str = ARMY_PATH) -> bool:
+def army_file_exists(army_path: str) -> bool:
     return os.path.exists(army_path)
 
 
-def army_file_contents(army_path: str = ARMY_PATH) -> ArmiesDict | None:
+def load_armies(army_path: str) -> ArmiesDict | None:
     if not army_file_exists(army_path):
         return None
 
@@ -56,8 +55,8 @@ class Army:
         self._regiment_number += 1
         return regiment
 
-    def save_army(self, army_path: str = ARMY_PATH) -> ArmiesDict:
-        temp: ArmiesDict | None = army_file_contents(army_path)
+    def save_army(self, army_path: str) -> ArmiesDict:
+        temp: ArmiesDict | None = load_armies(army_path)
         armies: ArmiesDict = temp if temp is not None else {}
         armies[self.name] = self.to_dict()
 
@@ -70,8 +69,8 @@ class Army:
         return armies
 
     @classmethod
-    def load_army(cls, army_name: str, army_path: str = ARMY_PATH) -> ArmyDict | None:
-        army_json: ArmiesDict | None = army_file_contents(army_path)
+    def load_army(cls, army_name: str, army_path: str) -> ArmyDict | None:
+        army_json: ArmiesDict | None = load_armies(army_path)
 
         result: ArmyDict | None = army_json.get(army_name, None) if army_json else None
         if not result:

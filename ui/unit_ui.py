@@ -4,11 +4,9 @@ from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
 from infrastructure.regiment import Regiment
-from infrastructure.unit import Unit, UnitNumbered
-from ui.warscroll_ui import warscroll_selection
 
 
-def unit_selection_menu(regiment: Regiment) -> UnitNumbered:
+def unit_selection_menu(regiment: Regiment) -> str:
     options = [
         (str(unit_num.unit_num), unit_num.warscroll.name) for unit_num in regiment.units
     ]
@@ -21,22 +19,4 @@ def unit_selection_menu(regiment: Regiment) -> UnitNumbered:
         show_frame=True,
     )
 
-    if result == "new_unit":
-        return new_unit()
-    else:
-        return regiment.units[int(result)]
-
-
-def new_unit() -> UnitNumbered:
-    unit = Unit()
-
-    print("<u>What warscroll do you want to use?:</u> ")
-    warscroll_selection()
-
-    unit_num: UnitNumbered = UnitNumbered(unit, 99)
-
-    return unit_num
-
-
-if __name__ == "__main__":
-    new_unit()
+    return result
