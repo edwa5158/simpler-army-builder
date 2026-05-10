@@ -13,6 +13,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "debugpy>=1.8.20",
     "pyrefly>=0.63.1",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",

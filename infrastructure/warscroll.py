@@ -18,6 +18,7 @@ type WarscrollsDict = dict[str, WarscrollDict]
 def warscroll_file_exists(warscroll_path: str) -> bool:
     return os.path.exists(warscroll_path)
 
+
 def load_warscrolls(warscroll_path: str) -> WarscrollsDict | None:
     if not warscroll_file_exists(warscroll_path):
         return None
@@ -25,6 +26,7 @@ def load_warscrolls(warscroll_path: str) -> WarscrollsDict | None:
     with open(warscroll_path, "r") as f:
         warscrolls_json: WarscrollsDict = json.load(f)
     return warscrolls_json
+
 
 class Warscroll:
     def __init__(self, name: str, points: int, is_hero: bool):

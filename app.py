@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from enum import Enum, auto
+from enum import Enum
 
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
-from config import ARMY_PATH
-from infrastructure.army import army_file_exists, Army, ArmiesDict, load_armies
+from config import ARMY_PATH, WARSCROLL_PATH
+from infrastructure.army import ArmiesDict, Army, army_file_exists, load_armies
 from infrastructure.warscroll import Warscrolls
 
 
@@ -19,6 +19,17 @@ class ScreenName(Enum):
     MANAGE_WARSCROLLS = ("manage_warscrolls", "Manage Warscrolls")
     EXIT = ("exit", "Exit")
 
+    def __new__(cls, value: str, display_name: str):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
+
+    def __init__(self, value: str, display_name: str):
+        self.display_name = display_name
+
+    @property
+    def as_tuple(self) -> tuple[str, str]:
+        return self.value, self.display_name
 
 
 class Screen:
@@ -30,34 +41,35 @@ class MainMenuScreen(Screen):
     def show(self) -> ScreenName:
         s = ScreenName
         options: list[tuple[str, str]] = [
-            s.MANAGE_ARMIES.value,
-            s.MANAGE_WARSCROLLS.value,
-            s.EXIT.value,
+            s.MANAGE_ARMIES.as_tuple,
+            s.MANAGE_WARSCROLLS.as_tuple,
+            s.EXIT.as_tuple,
         ]
         result: str = choice(
             message=HTML("<u>What do you want to do?</u>:"),
             options=options,
-            default=s.MANAGE_ARMIES.value[0],
+            default=s.MANAGE_ARMIES.as_tuple[0],
         )
         return ScreenName(result)
+
 
 class ManageArmiesScreen(Screen):
     def show(self) -> ScreenName:
         s = ScreenName
         options: list[tuple[str, str]] = [
-            s.NEW_ARMY.value,
-            s.LOAD_ARMY.value,
-            s.EXIT.value,
+            s.NEW_ARMY.as_tuple,
+            s.LOAD_ARMY.as_tuple,
+            s.EXIT.as_tuple,
         ]
         result: str = choice(
             message=HTML("<u>What do you want to do?</u>:"),
             options=options,
-            default=s.LOAD_ARMY.value[0],
+            default=s.LOAD_ARMY.as_tuple[0],
         )
         return ScreenName(result)
 
-class LoadArmiesMenu(Screen):
 
+class LoadArmiesMenu(Screen):
     def __init__(self, app_state: AppState):
         self.app_state: AppState = app_state
 
@@ -72,7 +84,9 @@ class LoadArmiesMenu(Screen):
             return ScreenName.MANAGE_ARMIES
 
         army_names = [(key, key) for key in self.app_state.armies_dict.keys()]
-        result: str = choice(message=HTML("<u>Select an army: </u>"), options=army_names)
+        result: str = choice(
+            message=HTML("<u>Select an army: </u>"), options=army_names
+        )
 
         print(HTML(f"You've selected <b>{result}</b>"))
         self.app_state.current_army = Army.from_dict(self.app_state.armies_dict[result])
@@ -83,9 +97,10 @@ def registry(app_state: AppState) -> dict[ScreenName, Screen]:
     screen_registry: dict[ScreenName, Screen] = {
         ScreenName.MAIN_MENU: MainMenuScreen(),
         ScreenName.MANAGE_ARMIES: ManageArmiesScreen(),
-        ScreenName.LOAD_ARMY: LoadArmiesMenu(app_state)
+        ScreenName.LOAD_ARMY: LoadArmiesMenu(app_state),
     }
     return screen_registry
+
 
 class AppState:
     def __init__(self, army_path: str, warscroll_path: str):
@@ -99,28 +114,32 @@ class AppState:
 
         @property
         def has_unsaved_changes(self) -> bool:
-            return (self.army_dirty or self.warscrolls_dirty)
+            return self.army_dirty or self.warscrolls_dirty
 
         def save(self):
-            if self.current_army: # and self.army_dirty
+            if self.current_army:  # and self.army_dirty
                 self.current_army.save_army(self.army_path)
-            if self.warscrolls: # and self.warscrolls_dirty
+            if self.warscrolls:  # and self.warscrolls_dirty
                 self.warscrolls.save_warscrolls(self.warscroll_path)
 
 
 class App:
-    def __init__(self, first_screen: Screen, state: AppState):
-        self.stack: list[Screen] = [first_screen]
+    def __init__(self, first_screen: ScreenName, state: AppState):
+        self.stack: list[ScreenName] = [first_screen]
         self.state: AppState = state
-
 
     def run(self):
         screen_registry = registry(self.state)
-        while self.stack
-            current_screen = self.stack.pop()
-            next_screen = screen_registry[current_screen.show()]
+        while self.stack:
+            screen_name = self.stack.pop()
+            if screen_name == ScreenName.EXIT:
+                break
+            current_screen = screen_registry[screen_name]
+            next_screen = current_screen.show()
             self.stack.append(next_screen)
 
 
 if __name__ == "__main__":
-    app = App(MainMenuScreen())
+    state = AppState(ARMY_PATH, WARSCROLL_PATH)
+    app = App(ScreenName.MAIN_MENU, state)
+    app.run()

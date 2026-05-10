@@ -1,5 +1,6 @@
 from infrastructure.warscroll import Warscrolls, WarscrollsDict, warscroll_file_exists
 
+
 def army_selection(army_path: str) -> Army | None:
     new_army_option: tuple[str, str] = ("new_army", "New Army")
     load_army_option: tuple[str, str] = ("load_army", "Load Army")
@@ -27,6 +28,7 @@ def army_selection(army_path: str) -> Army | None:
         return army
     else:
         return None
+
 
 def warscroll_selection(warscroll_path: str) -> str:
     warscrolls: WarscrollsDict = Warscrolls.load_warscrolls(warscroll_path)
