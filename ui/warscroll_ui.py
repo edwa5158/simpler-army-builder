@@ -1,4 +1,5 @@
-from infrastructure.warscroll import Warscrolls, WarscrollsDict, warscroll_file_exists
+from infrastructure.warscroll import (Warscrolls, WarscrollsDict,
+                                      warscroll_file_exists)
 
 
 def army_selection(army_path: str) -> Army | None:

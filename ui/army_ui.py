@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
+from screen import Screen, ScreenName
 
 from infrastructure.army import ArmiesDict, Army, army_file_exists
 from infrastructure.army import load_armies as army_file_contents
@@ -71,6 +74,42 @@ def main() -> None:
     import ui.regiment_ui as rui
 
     _ = rui.regiment_selection_menu(Army("new_army"))
+
+
+class ManageArmiesScreen(Screen):
+    def show(self) -> ScreenName:
+        s = ScreenName
+        options: list[tuple[str, str]] = [
+            s.NEW_ARMY.as_tuple,
+            s.LOAD_ARMY.as_tuple,
+            s.EXIT.as_tuple,
+        ]
+        result: str = choice(
+            message=HTML("<u>What do you want to do?</u>:"),
+            options=options,
+            default=s.LOAD_ARMY.value,
+        )
+        return ScreenName(result)
+
+
+class LoadArmiesMenu(Screen):
+    def __init__(self, armies_dict: Optional[ArmiesDict]):
+        self.armies_dict: ArmiesDict | None = armies_dict
+        self.current_army: Army | None = None
+
+    def show(self) -> ScreenName:
+        if not self.armies_dict:
+            print("No saved saved armies detected.", flush=False)
+            return ScreenName.MANAGE_ARMIES
+
+        army_names = [(key, key) for key in self.armies_dict.keys()]
+        result: str = choice(
+            message=HTML("<u>Select an army: </u>"), options=army_names
+        )
+
+        print(f"You've selected {result}", flush=False)
+        self.current_army = Army.from_dict(self.armies_dict[result])
+        return ScreenName.VIEW_ARMY
 
 
 if __name__ == "__main__":

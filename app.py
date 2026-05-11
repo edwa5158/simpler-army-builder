@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from ui.army_ui import army_file_contents
 import ui.screen as s
 from config import ARMY_PATH, WARSCROLL_PATH
-from infrastructure.army import ArmiesDict, Army
+from infrastructure.army import ArmiesDict, Army, army_file_exists
 from infrastructure.warscroll import Warscrolls
 from ui.screen import ScreenName as sn
-
-
+from ui.main_menu import MainMenuScreen
+from ui.army_ui import ManageArmiesScreen, LoadArmiesMenu
 class AppState:
     def __init__(self, army_path: str, warscroll_path: str):
         self.current_army: Army | None = None
@@ -27,12 +28,17 @@ class AppState:
         if self.warscrolls:
             self.warscrolls.save_warscrolls(self.warscroll_path)
 
+    def get_armies(self) -> ArmiesDict | None:
+        if not army_file_exists:
+            return None
+        return army_file_contents(self.army_path)
+        
 
-def registry(army_path: str) -> dict[s.ScreenName, s.Screen]:
+def registry(app_state: AppState) -> dict[s.ScreenName, s.Screen]:
     screen_registry: dict[s.ScreenName, s.Screen] = {
-        sn.MAIN_MENU: s.MainMenuScreen(),
-        sn.MANAGE_ARMIES: s.ManageArmiesScreen(),
-        sn.LOAD_ARMY: s.LoadArmiesMenu(army_path),
+        sn.MAIN_MENU: MainMenuScreen(),
+        sn.MANAGE_ARMIES: ManageArmiesScreen(),
+        sn.LOAD_ARMY: LoadArmiesMenu(app_state.get_armies()),
     }
     return screen_registry
 
