@@ -1,8 +1,11 @@
-from infrastructure.army import Army, ArmiesDict
-from infrastructure.warscroll import Warscrolls
+from __future__ import annotations
+
 import ui.screen as s
-from ui.screen import ScreenName as sn
 from config import ARMY_PATH, WARSCROLL_PATH
+from infrastructure.army import ArmiesDict, Army
+from infrastructure.warscroll import Warscrolls
+from ui.screen import ScreenName as sn
+
 
 class AppState:
     def __init__(self, army_path: str, warscroll_path: str):
@@ -14,15 +17,15 @@ class AppState:
         self.army_path: str = army_path
         self.warscroll_path: str = warscroll_path
 
-        @property
-        def has_unsaved_changes(self) -> bool:
-            return self.army_dirty or self.warscrolls_dirty
+    @property
+    def has_unsaved_changes(self) -> bool:
+        return self.army_dirty or self.warscrolls_dirty
 
-        def save(self):
-            if self.current_army:  # and self.army_dirty
-                self.current_army.save_army(self.army_path)
-            if self.warscrolls:  # and self.warscrolls_dirty
-                self.warscrolls.save_warscrolls(self.warscroll_path)
+    def save(self) -> None:
+        if self.current_army:
+            self.current_army.save_army(self.army_path)
+        if self.warscrolls:
+            self.warscrolls.save_warscrolls(self.warscroll_path)
 
 
 def registry(army_path: str) -> dict[s.ScreenName, s.Screen]:
@@ -33,12 +36,13 @@ def registry(army_path: str) -> dict[s.ScreenName, s.Screen]:
     }
     return screen_registry
 
+
 class App:
     def __init__(self, first_screen: s.ScreenName, state: AppState):
         self.stack: list[s.ScreenName] = [first_screen]
         self.state: AppState = state
 
-    def run(self):
+    def run(self) -> None:
         screen_registry = registry(self.state.army_path)
         while self.stack:
             screen_name = self.stack.pop()

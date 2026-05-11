@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from prompt_toolkit import print_formatted_text as print
 from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
@@ -40,32 +39,30 @@ def army_selection(army_path: str) -> Army | None:
     )
     if result == new_army_option[0]:
         return new_army()
-    elif result == load_army_option[0]:
-        army = load_armies(army_path)
-        return army
-    else:
-        return None
+    if result == load_army_option[0]:
+        return load_armies(army_path)
+    return None
 
 
 def new_army() -> Army:
     army_name = prompt(HTML("<u>Enter a name for your army:</u>    "))
-    print(HTML(f"You named your army <strong>{army_name}</strong>"))
+    print(HTML(f"You named your army <b>{army_name}</b>"), flush=False)
     return Army(army_name)
 
 
 def load_armies(army_path: str) -> Army | None:
     if not army_file_exists(army_path):
-        print("No saved army files detected.")
+        print("No saved army files detected.", flush=False)
         return None
     armies: ArmiesDict | None = army_file_contents(army_path=army_path)
     if not armies:
-        print(f"No saved armies found in {army_path}")
+        print(f"No saved armies found in {army_path}", flush=False)
         return None
 
     army_names = [(key, key) for key in armies.keys()]
     result: str = choice(message=HTML("<u>Select an army: </u>"), options=army_names)
 
-    print(HTML(f"You've selected <b>{result}</b>"))
+    print(HTML(f"You've selected <b>{result}</b>"), flush=False)
     army: Army = Army.from_dict(armies[result])
     return army
 

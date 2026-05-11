@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import TypedDict
+from typing import TypedDict, cast
 
 from infrastructure.regiment import Regiment, RegimentDict, regiments_from_dict
 
@@ -13,7 +13,7 @@ class ArmyDict(TypedDict):
     regiments: list[RegimentDict]
 
 
-type ArmiesDict = dict[str, ArmyDict]
+ArmiesDict = dict[str, ArmyDict]
 
 
 def army_file_exists(army_path: str) -> bool:
@@ -25,7 +25,7 @@ def load_armies(army_path: str) -> ArmiesDict | None:
         return None
 
     with open(army_path, "r") as f:
-        army_json: ArmiesDict = json.load(f)
+        army_json: ArmiesDict = cast(ArmiesDict, json.load(f))
     return army_json
 
 
@@ -46,6 +46,7 @@ class Army:
     def from_dict(cls, army_dict: ArmyDict) -> Army:
         army = Army(army_dict.get("name", ""))
         army.regiments = regiments_from_dict(army_dict["regiments"])
+        army._regiment_number = army_dict.get("_regiment_number", len(army.regiments))
         return army
 
     def add_regiment(self) -> Regiment:
@@ -62,10 +63,9 @@ class Army:
 
         json_str = json.dumps(armies, indent=4)
 
-        # print(json_str)
         with open(army_path, "w") as f:
             f.write(json_str)
-        print(f"Army saved to {army_path}")
+        print(f"Army saved to {army_path}", flush=False)
         return armies
 
     @classmethod
@@ -74,5 +74,5 @@ class Army:
 
         result: ArmyDict | None = army_json.get(army_name, None) if army_json else None
         if not result:
-            print(f"An army named `{army_name}` could not be found.")
+            print(f"An army named `{army_name}` could not be found.", flush=False)
         return result

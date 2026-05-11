@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from prompt_toolkit import print_formatted_text as print
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
 
+from config import ARMY_PATH
 from core.shared import header_underline
 from infrastructure.army import Army
 from infrastructure.regiment import Regiment
 
 
 def list_regiments(army: Army) -> tuple[list[tuple[str, str]], dict[str, Regiment]]:
-
     options: list[tuple[str, str]] = []
     regiment_dict: dict[str, Regiment] = {}
     for regiment in army.regiments:
@@ -38,12 +37,16 @@ def regiment_selection_menu(army: Army) -> Regiment:
     )
     print("\n")
 
-    print(HTML(f"You selected <b>{result}</b>\n"))
+    print(HTML(f"You selected <b>{result}</b>\n"), flush=False)
     return army.add_regiment() if result == "new_regiment" else regiment_dict[result]
 
 
 def main() -> None:
-    army = Army.from_dict(Army.load_army("two_regiment_army"))  # type: ignore
+    army_dict = Army.load_army("two_regiment_army", ARMY_PATH)
+    if army_dict is None:
+        return
+
+    army = Army.from_dict(army_dict)
     regiment_selection_menu(army)
 
 

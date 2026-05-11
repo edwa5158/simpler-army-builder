@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import TypedDict
+from typing import TypedDict, cast
 
 
 class WarscrollDict(TypedDict):
@@ -12,7 +12,7 @@ class WarscrollDict(TypedDict):
     is_hero: bool
 
 
-type WarscrollsDict = dict[str, WarscrollDict]
+WarscrollsDict = dict[str, WarscrollDict]
 
 
 def warscroll_file_exists(warscroll_path: str) -> bool:
@@ -24,7 +24,7 @@ def load_warscrolls(warscroll_path: str) -> WarscrollsDict | None:
         return None
 
     with open(warscroll_path, "r") as f:
-        warscrolls_json: WarscrollsDict = json.load(f)
+        warscrolls_json: WarscrollsDict = cast(WarscrollsDict, json.load(f))
     return warscrolls_json
 
 
@@ -67,7 +67,7 @@ class Warscrolls:
         catalog: WarscrollsDict = {}
         if Path(fp).exists():
             with open(fp, "r") as f:
-                catalog = json.load(f)
+                catalog = cast(WarscrollsDict, json.load(f))
         return catalog
 
     def save_warscrolls(self, warscrolls_file: str) -> None:
