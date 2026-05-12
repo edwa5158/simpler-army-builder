@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from typing import Optional
 
+from prompt_toolkit import print_formatted_text as print
 from prompt_toolkit import prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
-from screen import Screen, ScreenName
 
 from infrastructure.army import ArmiesDict, Army, army_file_exists
 from infrastructure.army import load_armies as army_file_contents
+from ui.screen import Screen, ScreenName
 
 
 def army_menu(army_path: str) -> str:
@@ -107,9 +108,44 @@ class LoadArmiesMenu(Screen):
             message=HTML("<u>Select an army: </u>"), options=army_names
         )
 
-        print(f"You've selected {result}", flush=False)
+        # print(f"You've selected {result}", flush=False)
         self.current_army = Army.from_dict(self.armies_dict[result])
         return ScreenName.VIEW_ARMY
+
+
+class NewArmyMenu(Screen):
+    def __init__(self, army: Army, army_path: str):
+        self.current_army: Army = army
+        self.army_path: str = army_path
+
+    def show(self) -> ScreenName:
+
+        self.current_army.name = prompt(HTML("<u>Enter the name of an army: </u>"))
+        self.current_army.save_army(self.army_path)
+
+        return ScreenName.VIEW_ARMY
+
+
+class ViewArmyMenu(Screen):
+    """A screen for viewing the Army metadata, as well as a summary of the regiments, units, and warsrolls that make it up. Allows editing the army name, and selecting a regiment to edit."""
+
+    def __init__(self, army: Army):
+        self.army: Army = army
+
+    def show(self):
+        print(HTML(f"<u>Army Name:</u> {self.army.name}"))
+        print(HTML(f"<u>Total Points:</u> {self.army.points}"))
+        from ui.regiment_ui import list_regiments
+
+        options, regiment_dict = list_regiments(self.army)
+
+        result: str = choice(
+            message=HTML("<u>Select a regiment to edit: </u>:"),
+            options=options,
+            default="new_regiment",
+            show_frame=True,
+        )
+        return ScreenName.MANAGE_ARMIES
 
 
 if __name__ == "__main__":

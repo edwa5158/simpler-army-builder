@@ -2,10 +2,6 @@ from __future__ import annotations
 
 from enum import Enum
 
-from prompt_toolkit.formatted_text import HTML
-from prompt_toolkit.shortcuts import choice
-
-from infrastructure.army import ArmiesDict, Army, army_file_exists, load_armies
 
 
 class ScreenName(str, Enum):

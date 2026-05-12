@@ -42,6 +42,10 @@ class Army:
             "regiments": [r.to_dict() for r in self.regiments],
         }
 
+    @property
+    def points(self) -> int:
+        return sum([r.points for r in self.regiments]) or 0
+
     @classmethod
     def from_dict(cls, army_dict: ArmyDict) -> Army:
         army = Army(army_dict.get("name", ""))

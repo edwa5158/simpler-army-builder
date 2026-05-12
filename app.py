@@ -1,16 +1,27 @@
 from __future__ import annotations
 
-from ui.army_ui import army_file_contents
+from datetime import datetime
+
 import ui.screen as s
 from config import ARMY_PATH, WARSCROLL_PATH
 from infrastructure.army import ArmiesDict, Army, army_file_exists
 from infrastructure.warscroll import Warscrolls
-from ui.screen import ScreenName as sn
+from ui.army_ui import (
+    LoadArmiesMenu,
+    ManageArmiesScreen,
+    NewArmyMenu,
+    ViewArmyMenu,
+    army_file_contents,
+)
 from ui.main_menu import MainMenuScreen
-from ui.army_ui import ManageArmiesScreen, LoadArmiesMenu
+from ui.screen import ScreenName as sn
+
+
 class AppState:
     def __init__(self, army_path: str, warscroll_path: str):
-        self.current_army: Army | None = None
+        self.current_army: Army = Army(
+            f"new_army - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         self.armies_dict: ArmiesDict | None = None
         self.warscrolls: Warscrolls | None = None
         self.army_dirty: bool = False
@@ -32,13 +43,15 @@ class AppState:
         if not army_file_exists:
             return None
         return army_file_contents(self.army_path)
-        
+
 
 def registry(app_state: AppState) -> dict[s.ScreenName, s.Screen]:
     screen_registry: dict[s.ScreenName, s.Screen] = {
         sn.MAIN_MENU: MainMenuScreen(),
         sn.MANAGE_ARMIES: ManageArmiesScreen(),
         sn.LOAD_ARMY: LoadArmiesMenu(app_state.get_armies()),
+        sn.NEW_ARMY: NewArmyMenu(app_state.current_army, app_state.army_path),
+        sn.VIEW_ARMY: ViewArmyMenu(app_state.current_army),
     }
     return screen_registry
 
@@ -49,13 +62,14 @@ class App:
         self.state: AppState = state
 
     def run(self) -> None:
-        screen_registry = registry(self.state.army_path)
+        screen_registry = registry(self.state)
         while self.stack:
             screen_name = self.stack.pop()
             if screen_name == sn.EXIT:
                 break
             current_screen = screen_registry[screen_name]
             next_screen = current_screen.show()
+            print("\n")
             self.stack.append(next_screen)
 
 

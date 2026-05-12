@@ -4,7 +4,8 @@ from typing import Literal
 
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.shortcuts import choice
-from screen import Screen, ScreenName
+
+from ui.screen import Screen, ScreenName
 
 type main_menu_response = Literal["manage_armies", "manage_warscrolls", "exit"]
 
