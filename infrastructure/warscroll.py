@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import TypedDict, cast
+from typing import Optional, TypedDict, cast
 
 
 class WarscrollDict(TypedDict):
     name: str
+    descr: str
     points: int
     is_hero: bool
 
@@ -29,18 +30,25 @@ def load_warscrolls(warscroll_path: str) -> WarscrollsDict | None:
 
 
 class Warscroll:
-    def __init__(self, name: str, points: int, is_hero: bool):
+    def __init__(self, name: str, descr: Optional[str], points: int, is_hero: bool):
         self.name = name
         self.points: int = points
         self.is_hero: bool = is_hero
+        self.descr: str = descr or ""
 
     def to_dict(self) -> WarscrollDict:
-        return {"name": self.name, "points": self.points, "is_hero": self.is_hero}
+        return {
+            "name": self.name,
+            "descr": self.descr,
+            "points": self.points,
+            "is_hero": self.is_hero,
+        }
 
     @classmethod
     def from_dict(cls, ws_dict: WarscrollDict) -> Warscroll:
         return Warscroll(
             ws_dict.get("name", ""),
+            ws_dict.get("descr", ""),
             ws_dict.get("points", 0),
             ws_dict.get("is_hero", False),
         )
