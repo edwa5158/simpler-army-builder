@@ -15,6 +15,7 @@ from ui.army_ui import (
 )
 from ui.main_menu import MainMenuScreen
 from ui.screen import ScreenName as sn
+from ui.warscroll_ui import WarscrollsMenu
 
 
 class AppState:
@@ -52,6 +53,7 @@ def registry(app_state: AppState) -> dict[s.ScreenName, s.Screen]:
         sn.LOAD_ARMY: LoadArmiesMenu(app_state.get_armies()),
         sn.NEW_ARMY: NewArmyMenu(app_state.current_army, app_state.army_path),
         sn.VIEW_ARMY: ViewArmyMenu(app_state.current_army),
+        sn.MANAGE_WARSCROLLS: WarscrollsMenu(app_state.warscroll_path),
     }
     return screen_registry
 

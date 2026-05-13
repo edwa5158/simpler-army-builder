@@ -139,7 +139,7 @@ class ViewArmyMenu(Screen):
 
         options, regiment_dict = list_regiments(self.army)
 
-        result: str = choice(
+        _ = choice(
             message=HTML("<u>Select a regiment to edit: </u>:"),
             options=options,
             default="new_regiment",
