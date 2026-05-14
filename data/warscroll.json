@@ -1,1 +1,129 @@
-{"Clanrats": {"name": "Clanrats", "points": 150, "is_hero": false}, "Grey Seer": {"name": "Grey Seer", "points": 300, "is_hero": true}, "Ratling Gun": {"name": "Ratling Gun", "points": 200, "is_hero": false}}
+{
+  "Clanrats": {
+    "name": "Clanrats",
+    "type": "Infantry",
+    "descr": "Clanrats are the unwashed masses of the Clans Verminus. They are the dregs of the ratmen’s society, considered utterly disposable by their masters. No matter how many are spitted on pikes, crushed by bludgeons or riddled with arrows, the tide of mangy fur never seems to slacken. In turn, they fight with whatever rusted spears and blades they can scrounge up, as well as their own claws and teeth when necessary. Clanrats are nimble but undisciplined soldiers and, like most Skaven, are prone to wavering at the slightest threat. Only when sufficiently motivated by fear, hunger or overwhelming advantage can they be trusted to press the advance – but when they do, they can reduce entire armies to piles of gnawed bones.",
+    "points": 150,
+    "is_hero": false,
+    "move": "6\"",
+    "save": "5+",
+    "control": "1",
+    "health": "1",
+    "unit_size": 20,
+    "base_size": "25mm",
+    "can_be_reinforced": true,
+    "regiment_options": [],
+    "abilities": {
+      "Seething Swarm": {
+        "Description": "Clanrats overwhelm their enemies with their seemingly endless numbers – biting, stabbing and trampling their own fallen beneath their bloody claws.",
+        "Effect": "You can return D3 slain models to this unit."
+      }
+    },
+    "keywords": [
+      "Infantry",
+      "Champion",
+      "Musician (1/20), Standard Bearer (1/20)",
+      "Chaos",
+      "Skaven",
+      "Verminus"
+    ],
+    "weapons": {
+      "melee_weapons": {
+        "Rusty Weapon": {
+          "Attack": "2",
+          "Hit": "4+",
+          "Wound": "5+",
+          "Rend": "-",
+          "Damage": "1",
+          "Weapon Abilities": ["Crit (Auto-wound)"]
+        }
+      }
+    }
+  },
+  "Grey Seer": {
+    "name": "Grey Seer",
+    "type": "Infantry Hero",
+    "descr": "Most devious of all Skaven are the Grey Seers. These are the agents of the Masterclan who work to manipulate Skaven society from the shadows. With a hissed incantation and flick of their claws, a Seer can summon storms of warp lightning, blast enemies with withering energy or teleport great distances in a blink. Grey Seers also possess a natural affinity for warpstone; their staffs of office are imbued with chunks of the corruptive realmstone, and many will consume shards of the substance to fuel their ruinous spellcraft.",
+    "points": 300,
+    "is_hero": true,
+    "move": "6\"",
+    "save": "6+",
+    "control": "2",
+    "health": "5",
+    "unit_size": 1,
+    "base_size": "32mm",
+    "can_be_reinforced": false,
+    "regiment_options": ["Skaven Overclaw, Any Skaven"],
+    "abilities": {
+      "Warpstone Shards": {
+        "Description": "Grey Seers consume potentially lethal shards of warpstone to enhance their spellcasting.",
+        "Effect": "The next time you make a casting roll for this unit this phase, roll 3D6 instead of 2D6. This roll cannot be re-rolled or modified. If the casting roll is 13, the spell is successfully cast and cannot be unbound. After the effect of that spell has been resolved, inflict D3 mortal damage on this unit. If the casting roll is not 13, remove 1 dice of your choice from the casting roll and use the remaining 2D6 as the casting roll."
+      }
+    },
+    "keywords": [
+      "Hero",
+      "Wizard(1)",
+      "Infantry",
+      "Chaos",
+      "Skaven",
+      "Masterclan"
+    ],
+    "weapons": {
+      "melee_weapons": {
+        "Warpstone Staff": {
+          "Attack": "3",
+          "Hit": "4+",
+          "Wound": "4+",
+          "Rend": "1",
+          "Damage": "D3"
+        }
+      }
+    }
+  },
+  "Ratling Gun": {
+    "name": "Ratling Gun",
+    "type": "Infantry",
+    "descr": "Ratling Guns are amongst the most commonplace of the weapon teams that emerge from the forges of the Clans Skryre. Powered by complex warp-steam batteries and activated by a hand-crank operated by the weapon's loader, Ratling Guns are notoriously difficult to aim. The sheer volume of bullets they unleash, however, can shred an enemy cohort regardless.",
+    "points": 200,
+    "is_hero": false,
+    "move": "6\"",
+    "save": "6+",
+    "control": "1",
+    "health": "3",
+    "unit_size": 3,
+    "base_size": "60 x 35mm",
+    "can_be_reinforced": true,
+    "regiment_options": [
+      "You cannot include more than 1 SKRYRE WEAPON TEAM in a regiment led by a non-SKRYRE HERO."
+    ],
+    "abilities": {
+      "Hidden Weapon Team": {
+        "Description": "Skryre weapon teams often lurk amidst larger formations.",
+        "Effect": "While this unit is within the combat range of a friendly Clanrats unit that has 5 or more models, and there are no other friendly WEAPON TEAM units within that unit’s combat range, this unit is not visible to enemy units more than 13\" away."
+      }
+    },
+    "keywords": ["Infantry", "Weapon Team", "Chaos", "Skaven", "Skryre"],
+    "weapons": {
+      "ranged_weapons": {
+        "Ratling Gun": {
+          "Range": "15\"",
+          "Attack": "3D6",
+          "Hit": "4+",
+          "Wound": "4+",
+          "Rend": "1",
+          "Damage": "1",
+          "Weapon Abilities": ["Crit (2 Hits)"]
+        },
+        "melee_weapons": {
+          "Rusty Knives": {
+            "Attack": "2",
+            "Hit": "4+",
+            "Wound": "5+",
+            "Rend": "-",
+            "Damage": "1"
+          }
+        }
+      }
+    }
+  }
+}

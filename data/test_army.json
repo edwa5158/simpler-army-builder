@@ -10,8 +10,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Clanrats",
+                                "type": "",
+                                "descr": "",
                                 "points": 150,
-                                "is_hero": false
+                                "is_hero": false,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 150
@@ -22,8 +35,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Grey Seer",
+                                "type": "",
+                                "descr": "",
                                 "points": 300,
-                                "is_hero": true
+                                "is_hero": true,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 300
@@ -46,8 +72,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Clanrats",
+                                "type": "",
+                                "descr": "",
                                 "points": 150,
-                                "is_hero": false
+                                "is_hero": false,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 150
@@ -58,8 +97,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Grey Seer",
+                                "type": "",
+                                "descr": "",
                                 "points": 300,
-                                "is_hero": true
+                                "is_hero": true,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 300
@@ -76,8 +128,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Clanrats",
+                                "type": "",
+                                "descr": "",
                                 "points": 150,
-                                "is_hero": false
+                                "is_hero": false,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 150
@@ -88,8 +153,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Clanrats",
+                                "type": "",
+                                "descr": "",
                                 "points": 150,
-                                "is_hero": false
+                                "is_hero": false,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 150
@@ -100,8 +178,21 @@
                         "unit": {
                             "warscroll": {
                                 "name": "Grey Seer",
+                                "type": "",
+                                "descr": "",
                                 "points": 300,
-                                "is_hero": true
+                                "is_hero": true,
+                                "move": "",
+                                "save": "",
+                                "control": "",
+                                "health": "",
+                                "unit_size": 0,
+                                "base_size": "",
+                                "can_be_reinforced": false,
+                                "regiment_options": [],
+                                "abilities": {},
+                                "keywords": [],
+                                "weapons": {}
                             },
                             "wargear": "",
                             "points": 300

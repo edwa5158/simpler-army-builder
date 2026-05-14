@@ -1,3 +1,5 @@
+import textwrap
+
 from prompt_toolkit import HTML, choice
 
 from infrastructure.warscroll import Warscrolls, WarscrollsDict
@@ -40,7 +42,15 @@ class WarscrollsMenu(Screen):
 
     def show(self):
         warscrolls: WarscrollsDict = Warscrolls.load_warscrolls(self.path)
-        options = [(key, ws["name"]) for key, ws in warscrolls.items()]
+        options = [
+            (
+                key,
+                HTML(
+                    f"<b>{ws['name']}{' (hero)' if ws['is_hero'] else ''}: {ws['points']} points</b><i>{'\n' + ' ' * 8 + textwrap.fill(ws['descr']) if ws['descr'] else ''}</i>"
+                ),
+            )
+            for key, ws in warscrolls.items()
+        ]
 
         _ = choice(
             message=HTML("<u>Select a Warscroll:</u>"),
