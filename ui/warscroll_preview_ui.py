@@ -1,17 +1,19 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Any
+from typing import Any, Callable
 
 from prompt_toolkit.application import Application
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.formatted_text import HTML, AnyFormattedText, FormattedText
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.layout import Layout
 from prompt_toolkit.layout.containers import HSplit, VerticalAlign, VSplit, Window
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.layout.dimension import Dimension
+from prompt_toolkit.layout.scrollable_pane import ScrollablePane
 from prompt_toolkit.styles import Style
-from prompt_toolkit.widgets import Box, Frame, Label
+from prompt_toolkit.widgets import Box, Label
 
 from infrastructure.warscroll import WarscrollDict, Warscrolls, WarscrollsDict
 from ui.screen import Screen, ScreenName
@@ -26,6 +28,10 @@ class WarscrollsPreviewMenu(Screen):
         self._warscrolls: WarscrollsDict = {}
         self._ordered_keys: list[str] = []
         self._selected_index: int = 0
+        self._details_pane: ScrollablePane | None = None
+        self._list_window: Window | None = None
+        self._details_window: Window | None = None
+        self._focused_panel: str = "Warscrolls"
 
     def show(self) -> ScreenName:
         warscrolls = Warscrolls.load_warscrolls(self.path)
@@ -38,20 +44,29 @@ class WarscrollsPreviewMenu(Screen):
         self._selected_index = 0
         self.selected_warscroll_key = self._get_current_key()
 
-        list_window = self._create_list_window()
-        details_window = self._create_details_window()
-        root_container = self._create_root_container(list_window, details_window)
-
-        app = Application(
-            layout=Layout(root_container, focused_element=list_window),
-            key_bindings=self._create_app_key_bindings(),
-            style=self._create_style(),
-            full_screen=False,
-            mouse_support=False,
-        )
+        app = self._build_application()
         app.run()
 
         return ScreenName.MANAGE_ARMIES
+
+    def _build_application(self, input=None, output=None) -> Application:
+        self._focused_panel = "Warscrolls"
+        self._list_window = self._create_list_window()
+        self._details_window = self._create_details_window()
+        self._details_pane = self._create_details_pane(self._details_window)
+        root_container = self._create_root_container(
+            self._list_window, self._details_pane
+        )
+
+        return Application(
+            layout=Layout(root_container, focused_element=self._list_window),
+            key_bindings=self._create_app_key_bindings(),
+            style=self._create_style(),
+            full_screen=True,
+            mouse_support=False,
+            input=input,
+            output=output,
+        )
 
     def _build_ordered_keys(self, warscrolls: WarscrollsDict) -> list[str]:
         return sorted(
@@ -93,15 +108,37 @@ class WarscrollsPreviewMenu(Screen):
 
     def _create_details_window(self) -> Window:
         return Window(
-            content=FormattedTextControl(self._get_detail_text),
+            content=FormattedTextControl(
+                self._get_detail_text,
+                focusable=True,
+                show_cursor=False,
+            ),
             wrap_lines=True,
             dont_extend_height=False,
             always_hide_cursor=True,
         )
 
+    def _create_details_pane(self, details_window: Window) -> ScrollablePane:
+        return ScrollablePane(
+            details_window,
+            show_scrollbar=True,
+            display_arrows=True,
+        )
+
     def _create_root_container(
-        self, list_window: Window, details_window: Window
+        self, list_window: Window, details_pane: ScrollablePane
     ) -> HSplit:
+        list_frame = self._create_panel_frame(
+            list_window,
+            "Warscrolls",
+            lambda: self._focused_panel == "Warscrolls",
+        )
+        details_frame = self._create_panel_frame(
+            details_pane,
+            "Details",
+            lambda: self._focused_panel == "Details",
+        )
+
         return HSplit(
             [
                 Box(
@@ -115,30 +152,25 @@ class WarscrollsPreviewMenu(Screen):
                 VSplit(
                     [
                         Box(
-                            Frame(list_window, title="Warscrolls"),
+                            list_frame,
                             padding_left=1,
                             padding_right=1,
                             width=Dimension(min=28, preferred=36, weight=1),
                         ),
                         Box(
-                            Frame(details_window, title="Details"),
+                            details_frame,
                             padding_right=1,
                             width=Dimension(min=60, weight=3),
                         ),
                     ],
                     padding=1,
-                    height=Dimension(min=12, weight=1),
+                    height=Dimension(weight=1),
                 ),
-                Window(height=1, char=" "),
                 Box(
-                    Label(
-                        text=[
-                            (
-                                "class:help",
-                                "Use ↑/↓ to browse, Enter to select, Esc to go back.",
-                            )
-                        ],
+                    Window(
+                        content=FormattedTextControl(self._get_help_text),
                         dont_extend_height=True,
+                        height=1,
                     ),
                     padding_left=1,
                     padding_right=1,
@@ -165,14 +197,12 @@ class WarscrollsPreviewMenu(Screen):
 
         @kb.add("home")
         def _move_home(event) -> None:
-            self._selected_index = 0
-            self.selected_warscroll_key = self._get_current_key()
+            self._set_selected_index(0)
             event.app.invalidate()
 
         @kb.add("end")
         def _move_end(event) -> None:
-            self._selected_index = len(self._ordered_keys) - 1
-            self.selected_warscroll_key = self._get_current_key()
+            self._set_selected_index(len(self._ordered_keys) - 1)
             event.app.invalidate()
 
         @kb.add("pageup")
@@ -189,6 +219,49 @@ class WarscrollsPreviewMenu(Screen):
 
     def _create_app_key_bindings(self) -> KeyBindings:
         kb = KeyBindings()
+        details_focused = Condition(lambda: self._focused_panel == "Details")
+
+        @kb.add("tab", eager=True)
+        def _focus_next(event) -> None:
+            self._toggle_focus(event)
+            event.app.invalidate()
+
+        @kb.add("s-tab", eager=True)
+        def _focus_previous(event) -> None:
+            self._toggle_focus(event)
+            event.app.invalidate()
+
+        @kb.add("up", filter=details_focused, eager=True)
+        @kb.add("k", filter=details_focused, eager=True)
+        def _scroll_up(event) -> None:
+            self._scroll_details(-1)
+            event.app.invalidate()
+
+        @kb.add("down", filter=details_focused, eager=True)
+        @kb.add("j", filter=details_focused, eager=True)
+        def _scroll_down(event) -> None:
+            self._scroll_details(1)
+            event.app.invalidate()
+
+        @kb.add("pageup", filter=details_focused, eager=True)
+        def _page_up(event) -> None:
+            self._scroll_details(-self._detail_page_step())
+            event.app.invalidate()
+
+        @kb.add("pagedown", filter=details_focused, eager=True)
+        def _page_down(event) -> None:
+            self._scroll_details(self._detail_page_step())
+            event.app.invalidate()
+
+        @kb.add("home", filter=details_focused, eager=True)
+        def _home(event) -> None:
+            self._scroll_details_to_top()
+            event.app.invalidate()
+
+        @kb.add("end", filter=details_focused, eager=True)
+        def _end(event) -> None:
+            self._scroll_details_to_bottom()
+            event.app.invalidate()
 
         @kb.add("enter", eager=True)
         def _accept(event) -> None:
@@ -203,10 +276,111 @@ class WarscrollsPreviewMenu(Screen):
 
         return kb
 
+    def _create_panel_frame(
+        self,
+        body: Window | ScrollablePane,
+        title: str,
+        is_focused: Callable[[], bool],
+    ) -> HSplit:
+        def border_style() -> str:
+            return (
+                "class:frame.border.focused" if is_focused() else "class:frame.border"
+            )
+
+        def title_text() -> AnyFormattedText:
+            style = "class:frame.label.focused" if is_focused() else "class:frame.label"
+            return FormattedText([(style, f" {title} ")])
+
+        return HSplit(
+            [
+                VSplit(
+                    [
+                        Window(width=1, height=1, char="┌", style=border_style),
+                        Window(height=1, char="─", style=border_style),
+                        Window(
+                            content=FormattedTextControl(title_text),
+                            dont_extend_width=True,
+                            height=1,
+                        ),
+                        Window(height=1, char="─", style=border_style),
+                        Window(width=1, height=1, char="┐", style=border_style),
+                    ],
+                    height=1,
+                ),
+                VSplit(
+                    [
+                        Window(width=1, char="│", style=border_style),
+                        body,
+                        Window(width=1, char="│", style=border_style),
+                    ],
+                    padding=0,
+                ),
+                VSplit(
+                    [
+                        Window(width=1, height=1, char="└", style=border_style),
+                        Window(height=1, char="─", style=border_style),
+                        Window(width=1, height=1, char="┘", style=border_style),
+                    ],
+                    height=1,
+                ),
+            ],
+            style="class:frame",
+        )
+
+    def _toggle_focus(self, event) -> None:
+        if self._list_window is None or self._details_window is None:
+            return
+
+        if self._focused_panel == "Warscrolls":
+            event.app.layout.focus(self._details_window)
+            self._focused_panel = "Details"
+            return
+
+        event.app.layout.focus(self._list_window)
+        self._focused_panel = "Warscrolls"
+
     def _move_selection(self, step: int) -> None:
         next_index = self._selected_index + step
-        self._selected_index = min(max(next_index, 0), len(self._ordered_keys) - 1)
+        self._set_selected_index(next_index)
+
+    def _set_selected_index(self, index: int) -> None:
+        self._selected_index = min(max(index, 0), len(self._ordered_keys) - 1)
         self.selected_warscroll_key = self._get_current_key()
+        self._scroll_details_to_top()
+
+    def _scroll_details(self, step: int) -> None:
+        if self._details_pane is None:
+            return
+
+        self._details_pane.vertical_scroll = max(
+            0, self._details_pane.vertical_scroll + step
+        )
+
+    def _scroll_details_to_top(self) -> None:
+        if self._details_pane is None:
+            return
+
+        self._details_pane.vertical_scroll = 0
+
+    def _scroll_details_to_bottom(self) -> None:
+        if self._details_pane is None:
+            return
+
+        self._details_pane.vertical_scroll = 10**9
+
+    def _detail_page_step(self) -> int:
+        return 10
+
+    def _get_help_text(self) -> AnyFormattedText:
+        return FormattedText(
+            [
+                ("class:help.label", f"Focus: {self._focused_panel}. "),
+                (
+                    "class:help",
+                    "Use ↑/↓ to browse warscrolls. Press Tab to switch focus. In Details, use ↑/↓, PgUp/PgDn, Home/End. Enter selects, Esc goes back.",
+                ),
+            ]
+        )
 
     def _get_list_text(self) -> AnyFormattedText:
         fragments: list[tuple[str, str]] = []
@@ -266,24 +440,16 @@ class WarscrollsPreviewMenu(Screen):
         self._append_field_section(fragments, "Profile", profile_lines)
 
         regiment_options = warscroll.get("regiment_options", [])
-        if regiment_options:
-            self._append_collection_section(
-                fragments, "Regiment Options", regiment_options
-            )
+        self._append_collection_section(fragments, "Regiment Options", regiment_options)
 
         keywords = warscroll.get("keywords", [])
-        if keywords:
-            self._append_text_section(
-                fragments, "Keywords", ", ".join(str(keyword) for keyword in keywords)
-            )
+        self._append_collection_section(fragments, "Keywords", keywords)
 
         abilities = warscroll.get("abilities", {})
-        if abilities:
-            self._append_collection_section(fragments, "Abilities", abilities)
+        self._append_collection_section(fragments, "Abilities", abilities)
 
         weapons = warscroll.get("weapons", {})
-        if weapons:
-            self._append_collection_section(fragments, "Weapons", weapons)
+        self._append_collection_section(fragments, "Weapons", weapons)
 
         self._append_additional_sections(fragments, warscroll)
 
@@ -301,22 +467,16 @@ class WarscrollsPreviewMenu(Screen):
             ("Save", warscroll.get("save", "")),
             ("Control", warscroll.get("control", "")),
             ("Health", warscroll.get("health", "")),
-            (
-                "Unit Size",
-                str(warscroll.get("unit_size", ""))
-                if warscroll.get("unit_size")
-                else "",
-            ),
+            ("Unit Size", warscroll.get("unit_size") or None),
             ("Base Size", warscroll.get("base_size", "")),
             (
-                "Reinforce",
+                "Can Be Reinforced",
                 "Yes" if warscroll.get("can_be_reinforced") else "No",
             ),
         ]
 
         for label, value in optional_fields:
-            if str(value).strip():
-                lines.append((label, str(value)))
+            lines.append((label, self._format_profile_value(value)))
 
         return lines
 
@@ -383,6 +543,14 @@ class WarscrollsPreviewMenu(Screen):
             return "Yes" if value else "No"
         return str(value)
 
+    def _format_profile_value(self, value: Any) -> str:
+        if value is None:
+            return self._empty_placeholder()
+        if isinstance(value, str):
+            stripped_value = value.strip()
+            return stripped_value or self._empty_placeholder()
+        return self._format_scalar_value(value)
+
     def _append_text_section(
         self, fragments: list[tuple[str, str]], title: str, value: str
     ) -> None:
@@ -411,10 +579,12 @@ class WarscrollsPreviewMenu(Screen):
         title: str,
         value: dict[str, Any] | list[Any],
     ) -> None:
+        self._append_section_title(fragments, title)
+
         if not value:
+            fragments.append(("class:detail.value", f"{self._empty_placeholder()}\n\n"))
             return
 
-        self._append_section_title(fragments, title)
         self._append_nested_value(fragments, value, indent=0)
         fragments.append(("", "\n"))
 
@@ -478,6 +648,10 @@ class WarscrollsPreviewMenu(Screen):
         fragments.append(("class:detail.section", f"{title}\n"))
 
     @staticmethod
+    def _empty_placeholder() -> str:
+        return "—"
+
+    @staticmethod
     def _humanize_label(label: str) -> str:
         return label.replace("_", " ").strip().title()
 
@@ -486,7 +660,9 @@ class WarscrollsPreviewMenu(Screen):
         return Style.from_dict(
             {
                 "frame.border": "fg:#666666",
+                "frame.border.focused": "fg:#5fafd7 bold",
                 "frame.label": "bold",
+                "frame.label.focused": "bold fg:#5fafd7",
                 "list.group": "bold fg:#a5c261",
                 "list.item": "",
                 "list.item.selected": "reverse",
@@ -502,5 +678,6 @@ class WarscrollsPreviewMenu(Screen):
                 "detail.label": "fg:#5fafd7",
                 "detail.value": "",
                 "help": "fg:#888888",
+                "help.label": "bold fg:#5fafd7",
             }
         )
