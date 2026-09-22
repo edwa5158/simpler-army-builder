@@ -65,3 +65,12 @@ def test_regiment_header():
         regiment.header()
         == "Regiment 00                                                450 Points"
     )
+
+
+def test_regiment_from_dict_restores_unit_number():
+    regiment = Regiment("Regiment 00", [unit2, unit1])
+
+    loaded = Regiment.from_dict(regiment.to_dict())
+    loaded.add_unit(unit1)
+
+    assert [u.unit_num for u in loaded.units] == [0, 1, 2]

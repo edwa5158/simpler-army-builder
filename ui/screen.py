@@ -3,12 +3,12 @@ from __future__ import annotations
 from enum import Enum
 
 
-
 class ScreenName(str, Enum):
     MAIN_MENU = "main_menu"
     MANAGE_ARMIES = "manage_armies"
     LOAD_ARMY = "load_army"
     VIEW_ARMY = "view_army"
+    VIEW_REGIMENT = "view_regiment"
     NEW_ARMY = "new_army"
     MANAGE_WARSCROLLS = "manage_warscrolls"
     EXIT = "exit"
@@ -23,6 +23,8 @@ class ScreenName(str, Enum):
             return "Load Army"
         if self is ScreenName.VIEW_ARMY:
             return "View Army"
+        if self is ScreenName.VIEW_REGIMENT:
+            return "View Regiment"
         if self is ScreenName.NEW_ARMY:
             return "New Army"
         if self is ScreenName.MANAGE_WARSCROLLS:
@@ -37,5 +39,3 @@ class ScreenName(str, Enum):
 class Screen:
     def show(self) -> ScreenName:
         raise NotImplementedError("This method has not been implemented")
-
-

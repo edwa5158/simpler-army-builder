@@ -5,15 +5,12 @@ from datetime import datetime
 import ui.screen as s
 from config import ARMY_PATH, WARSCROLL_PATH
 from infrastructure.army import ArmiesDict, Army, army_file_exists
+from infrastructure.regiment import Regiment
 from infrastructure.warscroll import Warscrolls
-from ui.army_ui import (
-    LoadArmiesMenu,
-    ManageArmiesScreen,
-    NewArmyMenu,
-    ViewArmyMenu,
-    army_file_contents,
-)
+from ui.army_ui import (LoadArmiesMenu, ManageArmiesScreen, NewArmyMenu,
+                        ViewArmyMenu, army_file_contents)
 from ui.main_menu import MainMenuScreen
+from ui.regiment_ui import ViewRegimentMenu
 from ui.screen import ScreenName as sn
 from ui.warscroll_ui import WarscrollsMenu
 
@@ -23,6 +20,7 @@ class AppState:
         self.current_army: Army = Army(
             f"new_army - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         )
+        self.current_regiment: Regiment | None = None
         self.armies_dict: ArmiesDict | None = None
         self.warscrolls: Warscrolls | None = None
         self.army_dirty: bool = False
@@ -42,9 +40,13 @@ class AppState:
 
     def set_current_army(self, army: Army) -> None:
         self.current_army = army
+        self.current_regiment = None
+
+    def set_current_regiment(self, regiment: Regiment) -> None:
+        self.current_regiment = regiment
 
     def get_armies(self) -> ArmiesDict | None:
-        if not army_file_exists:
+        if not army_file_exists(self.army_path):
             return None
         return army_file_contents(self.army_path)
 
@@ -53,11 +55,19 @@ def registry(app_state: AppState) -> dict[s.ScreenName, s.Screen]:
     screen_registry: dict[s.ScreenName, s.Screen] = {
         sn.MAIN_MENU: MainMenuScreen(),
         sn.MANAGE_ARMIES: ManageArmiesScreen(),
-        sn.LOAD_ARMY: LoadArmiesMenu(
-            app_state.get_armies(), app_state.set_current_army
-        ),
+        sn.LOAD_ARMY: LoadArmiesMenu(app_state.get_armies, app_state.set_current_army),
         sn.NEW_ARMY: NewArmyMenu(app_state.army_path, app_state.set_current_army),
-        sn.VIEW_ARMY: ViewArmyMenu(lambda: app_state.current_army),
+        sn.VIEW_ARMY: ViewArmyMenu(
+            lambda: app_state.current_army,
+            app_state.army_path,
+            app_state.set_current_regiment,
+        ),
+        sn.VIEW_REGIMENT: ViewRegimentMenu(
+            lambda: app_state.current_army,
+            lambda: app_state.current_regiment,
+            app_state.army_path,
+            app_state.warscroll_path,
+        ),
         sn.MANAGE_WARSCROLLS: WarscrollsMenu(app_state.warscroll_path),
     }
     return screen_registry

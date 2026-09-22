@@ -63,6 +63,7 @@ class Regiment:
         for unit in regiment_dict.get("units", {}):
             units.append(UnitNumbered.from_dict(unit))
         regiment.units = units
+        regiment._unit_number = regiment_dict.get("_unit_number", len(units))
         return regiment
 
 

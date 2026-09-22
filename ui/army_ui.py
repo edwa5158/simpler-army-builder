@@ -9,6 +9,7 @@ from prompt_toolkit.shortcuts import choice
 
 from infrastructure.army import ArmiesDict, Army, army_file_exists
 from infrastructure.army import load_armies as army_file_contents
+from infrastructure.regiment import Regiment
 from ui.screen import Screen, ScreenName
 
 
@@ -95,23 +96,27 @@ class ManageArmiesScreen(Screen):
 
 class LoadArmiesMenu(Screen):
     def __init__(
-        self, armies_dict: Optional[ArmiesDict], on_load: Callable[[Army], None]
+        self,
+        get_armies: Callable[[], Optional[ArmiesDict]],
+        on_load: Callable[[Army], None],
     ):
-        self.armies_dict: ArmiesDict | None = armies_dict
+        # Read the file at show() time so armies saved during this run show up.
+        self.get_armies: Callable[[], Optional[ArmiesDict]] = get_armies
         self.on_load: Callable[[Army], None] = on_load
 
     def show(self) -> ScreenName:
-        if not self.armies_dict:
+        armies_dict = self.get_armies()
+        if not armies_dict:
             print("No saved saved armies detected.", flush=False)
             return ScreenName.MANAGE_ARMIES
 
-        army_names = [(key, key) for key in self.armies_dict.keys()]
+        army_names = [(key, key) for key in armies_dict.keys()]
         result: str = choice(
             message=HTML("<u>Select an army: </u>"), options=army_names
         )
 
         # print(f"You've selected {result}", flush=False)
-        self.on_load(Army.from_dict(self.armies_dict[result]))
+        self.on_load(Army.from_dict(armies_dict[result]))
         return ScreenName.VIEW_ARMY
 
 
@@ -131,24 +136,40 @@ class NewArmyMenu(Screen):
 class ViewArmyMenu(Screen):
     """A screen for viewing the Army metadata, as well as a summary of the regiments, units, and warsrolls that make it up. Allows editing the army name, and selecting a regiment to edit."""
 
-    def __init__(self, get_army: Callable[[], Army]):
+    def __init__(
+        self,
+        get_army: Callable[[], Army],
+        army_path: str,
+        on_select_regiment: Callable[[Regiment], None],
+    ):
         # Read the army at show() time: the current army changes after startup.
         self.get_army: Callable[[], Army] = get_army
+        self.army_path: str = army_path
+        self.on_select_regiment: Callable[[Regiment], None] = on_select_regiment
 
-    def show(self):
+    def show(self) -> ScreenName:
         army = self.get_army()
         print(HTML(f"<u>Army Name:</u> {army.name}"))
         print(HTML(f"<u>Total Points:</u> {army.points}"))
         from ui.regiment_ui import list_regiments
 
         options, regiment_dict = list_regiments(army)
+        options.append(("back", "Back"))
 
-        _ = choice(
+        result: str = choice(
             message=HTML("<u>Select a regiment to edit: </u>:"),
             options=options,
             default="new_regiment",
             show_frame=True,
         )
+        if result == "new_regiment":
+            regiment = army.add_regiment()
+            army.save_army(self.army_path)
+            print(HTML(f"Added <b>{regiment.name}</b>"), flush=False)
+            return ScreenName.VIEW_ARMY
+        if result in regiment_dict:
+            self.on_select_regiment(regiment_dict[result])
+            return ScreenName.VIEW_REGIMENT
         return ScreenName.MANAGE_ARMIES
 
 
