@@ -56,6 +56,10 @@ Every class implements `to_dict()` / `from_dict()` against a matching `TypedDict
 
 `data_store/army.json`, `data_store/warscroll.json`, and `data_store/test_army.json` are committed and read at runtime via the `config.py` constants. Tests write to `TEST_ARMY_PATH` and clean up with `core.shared.delete_file_if_it_exists`. A stale `infrastructure/army.json` also exists and is unused.
 
+## Git workflow
+
+This is a one-person project: commit and push straight to `main` unless told otherwise. Don't create feature branches or pull requests. CI (`.github/workflows/main.yml`) runs on pushes to `main`.
+
 ## Other
 
 - `planned_flow.mmd` is the target navigation flowchart; `TODO.md` is the gap list between it and the code.
