@@ -1,6 +1,7 @@
 import textwrap
 
 from prompt_toolkit import HTML, choice
+from prompt_toolkit import print_formatted_text as print
 
 from infrastructure.warscroll import Warscrolls, WarscrollsDict
 from ui.screen import Screen, ScreenName
@@ -42,6 +43,10 @@ class WarscrollsMenu(Screen):
 
     def show(self):
         warscrolls: WarscrollsDict = Warscrolls.load_warscrolls(self.path)
+        if not warscrolls:
+            print("No saved warscrolls detected.", flush=False)
+            return ScreenName.MAIN_MENU
+
         options = [
             (
                 key,
@@ -55,6 +60,6 @@ class WarscrollsMenu(Screen):
         _ = choice(
             message=HTML("<u>Select a Warscroll:</u>"),
             options=options,
-            default=options[0],
+            default=options[0][0],
         )
         return ScreenName.MANAGE_ARMIES

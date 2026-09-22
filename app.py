@@ -40,6 +40,9 @@ class AppState:
         if self.warscrolls:
             self.warscrolls.save_warscrolls(self.warscroll_path)
 
+    def set_current_army(self, army: Army) -> None:
+        self.current_army = army
+
     def get_armies(self) -> ArmiesDict | None:
         if not army_file_exists:
             return None
@@ -50,9 +53,11 @@ def registry(app_state: AppState) -> dict[s.ScreenName, s.Screen]:
     screen_registry: dict[s.ScreenName, s.Screen] = {
         sn.MAIN_MENU: MainMenuScreen(),
         sn.MANAGE_ARMIES: ManageArmiesScreen(),
-        sn.LOAD_ARMY: LoadArmiesMenu(app_state.get_armies()),
-        sn.NEW_ARMY: NewArmyMenu(app_state.current_army, app_state.army_path),
-        sn.VIEW_ARMY: ViewArmyMenu(app_state.current_army),
+        sn.LOAD_ARMY: LoadArmiesMenu(
+            app_state.get_armies(), app_state.set_current_army
+        ),
+        sn.NEW_ARMY: NewArmyMenu(app_state.army_path, app_state.set_current_army),
+        sn.VIEW_ARMY: ViewArmyMenu(lambda: app_state.current_army),
         sn.MANAGE_WARSCROLLS: WarscrollsMenu(app_state.warscroll_path),
     }
     return screen_registry
