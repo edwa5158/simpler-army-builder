@@ -11,7 +11,7 @@ type exit_menu_response = Literal["yes", "no", "cancel"]
 def exit_menu(unsaved_changes: bool = False) -> exit_menu_response:
     result: exit_menu_response
     if unsaved_changes:
-        options: list[tuple[str, str]] = [
+        options: list[tuple[exit_menu_response, str]] = [
             ("yes", "Yes"),
             ("no", "No"),
             ("cancel", "Cancel"),
@@ -20,7 +20,7 @@ def exit_menu(unsaved_changes: bool = False) -> exit_menu_response:
             message=HTML("<u>What do you want to do?</u>:"),
             options=options,
             default="yes",
-        )  # type: ignore
+        )
     else:
         result = "no"
 

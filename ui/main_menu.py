@@ -11,7 +11,7 @@ type main_menu_response = Literal["manage_armies", "manage_warscrolls", "exit"]
 
 
 def main_menu() -> main_menu_response:
-    options: list[tuple[str, str]] = [
+    options: list[tuple[main_menu_response, str]] = [
         ("manage_armies", "Manage Armies"),
         ("manage_warscrolls", "Manage Warscrolls"),
         ("exit", "Exit"),
@@ -20,7 +20,7 @@ def main_menu() -> main_menu_response:
         message=HTML("<u>What do you want to do?</u>:"),
         options=options,
         default="manage_armies",
-    )  # type: ignore
+    )
     return result
 
 

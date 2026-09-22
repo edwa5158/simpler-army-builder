@@ -577,7 +577,7 @@ class WarscrollsPreviewMenu(Screen):
         self,
         fragments: list[tuple[str, str]],
         title: str,
-        value: dict[str, Any] | list[Any],
+        value: dict[Any, Any] | list[Any],
     ) -> None:
         self._append_section_title(fragments, title)
 

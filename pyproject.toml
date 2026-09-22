@@ -64,3 +64,10 @@ directory = ".cache/coverage/html"
 
 [tool.ruff]
 cache-dir = ".cache/ruff"
+
+# Skill scripts run in their own `uv run --with ...` environment, not the project's.
+[tool.ty.src]
+exclude = [".claude"]
+
+[tool.pyrefly]
+project-excludes = [".claude/**"]
