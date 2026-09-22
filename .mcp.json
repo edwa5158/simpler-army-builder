@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "sonarqube": {
+      "command": "sonar",
+      "args": [
+        "run",
+        "mcp",
+        "--project",
+        "edwa5158_simpler-army-builder"
+      ]
+    }
+  }
+}
